@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12-Week S&C Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --off-black: #111111;
+    --panel: #161616;
+    --border: #2a2a2a;
+    --muted: #3a3a3a;
+    --text-dim: #666;
+    --text-mid: #999;
+    --text: #e8e8e8;
+    --text-bright: #f5f5f5;
+    --green: #39d98a;
+    --green-dim: #1a4d35;
+    --yellow: #f5c842;
+    --yellow-dim: #4a3d10;
+    --red: #f25c5c;
+    --red-dim: #4a1a1a;
+    --accent: #c8a96e;
+    --accent-dim: #3d2e12;
+    --blue: #5b9cf6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    background: var(--off-black);
+  }
+
+  .header-left h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 2px;
+    color: var(--text-bright);
+    line-height: 1;
+  }
+
+  .header-left .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .goal-tag {
+    display: inline-block;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+
+  .header-right p {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── NAV TABS ── */
+  nav {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--off-black);
+    padding: 0 40px;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  nav button {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  nav button:hover { color: var(--text-mid); }
+
+  nav button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── MAIN ── */
+  main { padding: 32px 40px; max-width: 1200px; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── WHOOP DASHBOARD ── */
+  .whoop-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .metric-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  .metric-card .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .metric-card .value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--text-bright);
+  }
+
+  .metric-card .unit {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .metric-input {
+    width: 100%;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-bright);
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    padding: 8px 12px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .metric-input:focus { border-color: var(--accent); }
+
+  .analyze-btn {
+    display: block;
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    padding: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: opacity 0.2s;
+  }
+
+  .analyze-btn:hover { opacity: 0.85; }
+
+  .prescription-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    display: none;
+  }
+
+  .prescription-box.visible { display: block; }
+
+  .rx-status {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .status-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+
+  .rx-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .rx-item {
+    background: var(--off-black);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 16px;
+  }
+
+  .rx-item .rx-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .rx-item .rx-value {
+    font-size: 15px;
+    color: var(--text-bright);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .rx-note {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-dim);
+    border-radius: 0 3px 3px 0;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── PHASE OVERVIEW ── */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .phase-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .phase-card.phase1::before { background: var(--blue); }
+  .phase-card.phase2::before { background: var(--yellow); }
+  .phase-card.phase3::before { background: var(--green); }
+
+  .phase-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    opacity: 0.08;
+    position: absolute;
+    right: 16px;
+    top: 12px;
+  }
+
+  .phase-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .phase-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--text-bright);
+    margin-bottom: 12px;
+  }
+
+  .phase-detail {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  .phase-weeks {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* ── WEEK TABLE ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    margin-top: 28px;
+  }
+
+  .week-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .week-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--off-black);
+  }
+
+  .week-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .week-table tr:hover td { background: var(--panel); }
+
+  .week-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-bright);
+    white-space: nowrap;
+  }
+
+  .phase-pill {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .pill-blue { background: rgba(91,156,246,0.15); color: var(--blue); border: 1px solid rgba(91,156,246,0.3); }
+  .pill-yellow { background: rgba(245,200,66,0.15); color: var(--yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .pill-green { background: rgba(57,217,138,0.15); color: var(--green); border: 1px solid rgba(57,217,138,0.3); }
+  .pill-gray { background: rgba(100,100,100,0.2); color: var(--text-mid); border: 1px solid var(--border); }
+
+  .run-dist { color: var(--green); font-weight: 500; }
+  .note-text { color: var(--text-dim); font-size: 12px; }
+
+  /* ── DAILY PLAN ── */
+  .day-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .day-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text-mid);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .day-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .day-btn.active { background: var(--accent); border-color: var(--accent); color: var(--black); font-weight: 600; }
+
+  .week-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .week-selector label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .week-selector select {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text-bright);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    outline: none;
+  }
+
+  .session-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .session-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--off-black);
+  }
+
+  .session-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: var(--text-bright);
+  }
+
+  .session-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .exercise-list { padding: 0; }
+
+  .exercise-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 80px 100px 120px;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .exercise-row:last-child { border-bottom: none; }
+
+  .ex-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 14px 0 14px 20px;
+  }
+
+  .ex-name {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--text-bright);
+  }
+
+  .ex-name .ex-note {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .ex-sets, .ex-reps, .ex-rest {
+    padding: 14px 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-mid);
+    text-align: center;
+  }
+
+  .ex-sets { color: var(--accent); font-weight: 500; }
+
+  .table-header {
+    display: grid;
+    grid-template-columns: 32px 1fr 80px 100px 120px;
+    background: var(--off-black);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .th-cell {
+    padding: 8px 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .th-cell:nth-child(1) { padding-left: 20px; text-align: left; }
+  .th-cell:nth-child(2) { text-align: left; }
+
+  .section-divider {
+    background: var(--off-black);
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    padding: 8px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .run-block {
+    padding: 20px 24px;
+  }
+
+  .run-interval-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .run-interval-row:last-child { border-bottom: none; }
+
+  .interval-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .badge-run { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+  .badge-walk { background: var(--muted); color: var(--text-dim); border: 1px solid var(--border); }
+
+  .interval-desc { font-size: 13px; color: var(--text); }
+  .interval-time { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-mid); margin-left: auto; }
+
+  /* ── CORRECTIVE ── */
+  .corrective-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .corrective-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  .corrective-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+
+  .corrective-card .target {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  .corrective-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .corrective-item:last-child { border-bottom: none; }
+
+  .corrective-rx {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+
+  /* ── INFO BOXES ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .info-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  .info-box h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .info-box p, .info-box li {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+
+  .info-box ul { padding-left: 16px; }
+
+  .highlight { color: var(--accent); font-weight: 500; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    header { padding: 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    nav { padding: 0 20px; }
+    main { padding: 20px; }
+    .whoop-header { grid-template-columns: 1fr; }
+    .phase-grid { grid-template-columns: 1fr; }
+    .rx-grid { grid-template-columns: 1fr; }
+    .corrective-grid { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr; }
+    .exercise-row, .table-header { grid-template-columns: 24px 1fr 60px 80px 90px; }
+  }
+
+  /* ── LOG TAB ── */
+  .log-entry {
+    display: grid;
+    grid-template-columns: 110px 80px 60px 60px 1fr 90px;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .log-entry:hover { background: var(--panel); }
+  .log-entry.header {
+    background: var(--off-black);
+    border-bottom: 2px solid var(--border);
+  }
+  .log-cell {
+    padding: 11px 14px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .log-entry.header .log-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 9px 14px;
+  }
+  .log-score-green { color: var(--green); font-weight: 600; }
+  .log-score-yellow { color: var(--yellow); font-weight: 600; }
+  .log-score-red { color: var(--red); font-weight: 600; }
+  .log-table {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+  .log-empty {
+    padding: 40px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .log-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .log-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .log-stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .log-stat-card .ls-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .log-stat-card .ls-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--text-bright);
+  }
+  .log-stat-card .ls-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .save-btn {
+    display: inline-block;
+    background: var(--green-dim);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+  .save-btn:hover { background: var(--green); color: var(--black); }
+  .clear-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .clear-btn:hover { border-color: var(--red); color: var(--red); }
+  .save-confirm {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 1px;
+    display: none;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>12-WEEK S&amp;C</h1>
+    <div class="subtitle">Strength &amp; Conditioning Cycle — 5K Finish Goal</div>
+  </div>
+  <div class="header-right">
+    <div class="goal-tag">Lean + Run 5K</div>
+    <p>3–4 days/wk · 45–60 min · Home Gym → Commercial</p>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('whoop')">Whoop Daily Rx</button>
+  <button onclick="showTab('overview')">Phase Overview</button>
+  <button onclick="showTab('schedule')">Week-by-Week</button>
+  <button onclick="showTab('sessions')">Session Builder</button>
+  <button onclick="showTab('corrective')">Corrective Work</button>
+  <button onclick="showTab('notes')">Coach Notes</button>
+  <button onclick="showTab('log')">Training Log</button>
+</nav>
+
+<main>
+
+  <!-- ══════════════ WHOOP TAB ══════════════ -->
+  <div id="tab-whoop" class="tab-panel active">
+    <div class="section-label">Daily Training Prescription — Enter Today's Whoop Metrics</div>
+
+    <div class="whoop-header">
+      <div class="metric-card">
+        <div class="label">Recovery Score</div>
+        <div class="input-row">
+          <input class="metric-input" id="recovery" type="number" min="0" max="100" placeholder="—" maxlength="3">
+        </div>
+        <div class="unit">0–100 · Green ≥67 · Yellow 34–66 · Red ≤33</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">HRV (ms)</div>
+        <div class="input-row">
+          <input class="metric-input" id="hrv" type="number" min="0" max="300" placeholder="—">
+        </div>
+        <div class="unit">Heart rate variability · Your baseline matters more than absolute</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Yesterday's Strain</div>
+        <div class="input-row">
+          <input class="metric-input" id="strain" type="number" min="0" max="21" step="0.1" placeholder="—">
+        </div>
+        <div class="unit">0–21 scale · Low &lt;10 · Moderate 10–14 · High &gt;14</div>
+      </div>
+    </div>
+
+    <button class="analyze-btn" onclick="analyzeWhoop()">GENERATE TODAY'S PRESCRIPTION →</button>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;">
+      <button class="save-btn" id="save-btn" onclick="saveToLog()" style="display:none;">↓ SAVE TO LOG</button>
+      <span class="save-confirm" id="save-confirm">✓ Saved to log</span>
+    </div>
+
+    <div class="prescription-box" id="prescription">
+      <div class="rx-status" id="rx-status"></div>
+      <div class="rx-grid" id="rx-grid"></div>
+      <div class="rx-note" id="rx-note"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ OVERVIEW TAB ══════════════ -->
+  <div id="tab-overview" class="tab-panel">
+    <div class="section-label">Three-Phase Structure</div>
+
+    <div class="phase-grid">
+      <div class="phase-card phase1">
+        <div class="phase-num">I</div>
+        <div class="phase-tag">Phase 1 · Weeks 1–4</div>
+        <div class="phase-name">Foundation</div>
+        <div class="phase-detail">
+          Rebuild movement quality, reintroduce load, and begin the run/walk protocol. Hip flexor and calf correctives are mandatory in every session. Lifting is full-body 3x/week. Run sessions 2x/week using 1:2 run:walk intervals. Nutrition: begin consistent food scale tracking.
+        </div>
+        <div class="phase-weeks">3 days/wk · Low-Moderate Intensity</div>
+      </div>
+
+      <div class="phase-card phase2">
+        <div class="phase-num">II</div>
+        <div class="phase-tag">Phase 2 · Weeks 5–9</div>
+        <div class="phase-name">Build</div>
+        <div class="phase-detail">
+          Increase to 4 training days. Add commercial gym access and heavier compound loading. Run intervals shift to 2:1 and then continuous running by week 8. Lower body emphasis increases. Correctives maintained but become shorter as mobility improves.
+        </div>
+        <div class="phase-weeks">4 days/wk · Moderate-High Intensity</div>
+      </div>
+
+      <div class="phase-card phase3">
+        <div class="phase-num">III</div>
+        <div class="phase-tag">Phase 3 · Weeks 10–12</div>
+        <div class="phase-name">Peak</div>
+        <div class="phase-detail">
+          Taper lifting volume by 20%, increase run distance. Week 11 is a full 5K practice run at comfortable pace. Week 12 is your race week — taper run to 2 miles mid-week, rest 2 days out, run your 5K.
+        </div>
+        <div class="phase-weeks">3–4 days/wk · Taper + Peak</div>
+      </div>
+    </div>
+
+    <div class="section-label">Training Principles</div>
+    <div class="info-grid">
+      <div class="info-box">
+        <h3>Run Progression Logic</h3>
+        <ul>
+          <li>Start: <span class="highlight">0.25 mi continuous</span> → build via run/walk intervals</li>
+          <li>Week 1–4: run 1 min, walk 2 min × 8–10 rounds</li>
+          <li>Week 5–7: run 2 min, walk 1 min × 8 rounds</li>
+          <li>Week 8–9: run 8–12 min continuous, walk 2, repeat</li>
+          <li>Week 10–11: run 20–30 min continuous</li>
+          <li>Week 12: taper to 5K race day</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>Lifting Structure</h3>
+        <ul>
+          <li><span class="highlight">Phase 1:</span> Full-body 3x/wk, 3×10–12, moderate load</li>
+          <li><span class="highlight">Phase 2:</span> Upper/Lower split 4x/wk, 4×6–10, progressive</li>
+          <li><span class="highlight">Phase 3:</span> Volume –20%, maintain intensity</li>
+          <li>Lower body priority: glutes, hamstrings, calves every session</li>
+          <li>No leg day isolation from runs — manage fatigue via Whoop</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>Whoop Recovery Logic</h3>
+        <ul>
+          <li><span class="highlight" style="color:var(--green)">Green (67–100):</span> Train as programmed, full effort</li>
+          <li><span class="highlight" style="color:var(--yellow)">Yellow (34–66):</span> Reduce volume 20%, skip AMRAP sets, easy run pace</li>
+          <li><span class="highlight" style="color:var(--red)">Red (0–33):</span> Active recovery only — correctives + 20 min walk</li>
+          <li>Two consecutive red days = mandatory full rest</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>Nutrition Guidance</h3>
+        <ul>
+          <li>You have the food scale — start tracking protein first</li>
+          <li>Target: <span class="highlight">0.8–1g protein per lb of bodyweight</span></li>
+          <li>Slight caloric deficit (~300 kcal) on non-training days</li>
+          <li>Eat at maintenance on lifting days, slight surplus on long run days</li>
+          <li>Hydration: minimum 80–100oz water/day, more on run days</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCHEDULE TAB ══════════════ -->
+  <div id="tab-schedule" class="tab-panel">
+    <div class="section-label">12-Week Week-by-Week Plan</div>
+    <table class="week-table">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Phase</th>
+          <th>Lift Focus</th>
+          <th>Run Target</th>
+          <th>Run Protocol</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="week-badge">W1</span></td>
+          <td><span class="phase-pill pill-blue">Foundation</span></td>
+          <td>Full Body · 3×12 · Light-Mod</td>
+          <td><span class="run-dist">~1.5 mi total</span></td>
+          <td>Run 1 min / Walk 2 min × 8</td>
+          <td class="note-text">Re-entry week. Own the correctives. Don't push load.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W2</span></td>
+          <td><span class="phase-pill pill-blue">Foundation</span></td>
+          <td>Full Body · 3×12 · Moderate</td>
+          <td><span class="run-dist">~1.75 mi total</span></td>
+          <td>Run 1 min / Walk 2 min × 10</td>
+          <td class="note-text">Add 2 rounds to run. Increase lift load 5–10%.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W3</span></td>
+          <td><span class="phase-pill pill-blue">Foundation</span></td>
+          <td>Full Body · 4×10 · Moderate</td>
+          <td><span class="run-dist">~2 mi total</span></td>
+          <td>Run 90s / Walk 2 min × 8</td>
+          <td class="note-text">Run intervals extend. Track hip flexor tightness post-run.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W4</span></td>
+          <td><span class="phase-pill pill-blue">Foundation</span></td>
+          <td>Full Body · 4×10 · Moderate+</td>
+          <td><span class="run-dist">~2.25 mi total</span></td>
+          <td>Run 90s / Walk 90s × 10</td>
+          <td class="note-text">Deload optional if Whoop HRV trending down all week.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W5</span></td>
+          <td><span class="phase-pill pill-yellow">Build</span></td>
+          <td>Upper/Lower Split · 4×8 · Mod-Heavy</td>
+          <td><span class="run-dist">~2.5 mi total</span></td>
+          <td>Run 2 min / Walk 1 min × 8</td>
+          <td class="note-text">Split begins. Gym membership target week. Heavier lower body loading.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W6</span></td>
+          <td><span class="phase-pill pill-yellow">Build</span></td>
+          <td>Upper/Lower · 4×8 · Heavy</td>
+          <td><span class="run-dist">~2.75 mi total</span></td>
+          <td>Run 2 min / Walk 1 min × 10</td>
+          <td class="note-text">Manage cumulative fatigue — 4-day week starts here.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W7</span></td>
+          <td><span class="phase-pill pill-yellow">Build</span></td>
+          <td>Upper/Lower · 5×6 · Heavy</td>
+          <td><span class="run-dist">~3 mi total</span></td>
+          <td>Run 3 min / Walk 1 min × 6</td>
+          <td class="note-text">First 3-mile run week. High fatigue risk — respect yellow Whoop days.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W8</span></td>
+          <td><span class="phase-pill pill-yellow">Build</span></td>
+          <td>Upper/Lower · 5×5 · Heavy</td>
+          <td><span class="run-dist">~3.25 mi total</span></td>
+          <td>Run 8–10 min continuous / Walk 2 / Repeat ×2</td>
+          <td class="note-text">Transition to continuous running. This is a milestone week.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W9</span></td>
+          <td><span class="phase-pill pill-yellow">Build</span></td>
+          <td>Upper/Lower · 4×6 · Heavy</td>
+          <td><span class="run-dist">~3.5 mi total</span></td>
+          <td>Run 15 min continuous / Walk 2 / Run 10 min</td>
+          <td class="note-text">Volume peak week. Expect fatigue. Trust the recovery protocol.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W10</span></td>
+          <td><span class="phase-pill pill-green">Peak</span></td>
+          <td>Upper/Lower · 3×6 · Moderate (–20% vol)</td>
+          <td><span class="run-dist">~4 mi total</span></td>
+          <td>Run 25 min continuous (longest yet)</td>
+          <td class="note-text">Taper lifts. Run confidence building. No new PRs this week.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W11</span></td>
+          <td><span class="phase-pill pill-green">Peak</span></td>
+          <td>Upper/Lower · 3×6 · Moderate</td>
+          <td><span class="run-dist">5K practice run</span></td>
+          <td>Run full 3.1 miles — any pace, no stops goal</td>
+          <td class="note-text">Practice 5K. This is your confidence run. Time it for reference only.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W12</span></td>
+          <td><span class="phase-pill pill-green">Peak</span></td>
+          <td>Upper only · 2×8 · Light (race week)</td>
+          <td><span class="run-dist">5K Race Day</span></td>
+          <td>Tue: 2 mi easy · Wed/Thu: Rest · Sat: 5K</td>
+          <td class="note-text">No heroics. Sleep 8+ hrs. Race day: start slow, finish strong.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════ SESSIONS TAB ══════════════ -->
+  <div id="tab-sessions" class="tab-panel">
+    <div class="section-label">Session Builder — Select Phase and Day Type</div>
+
+    <div class="week-selector">
+      <label>Phase</label>
+      <select id="phase-select" onchange="renderSession()">
+        <option value="1">Phase 1 — Foundation (Wks 1–4)</option>
+        <option value="2">Phase 2 — Build (Wks 5–9)</option>
+        <option value="3">Phase 3 — Peak (Wks 10–12)</option>
+      </select>
+    </div>
+
+    <div class="day-selector" id="day-selector">
+      <button class="day-btn active" onclick="selectDay('fullbody', this)">Full Body Lift</button>
+      <button class="day-btn" onclick="selectDay('run', this)">Run Day</button>
+      <button class="day-btn" onclick="selectDay('rest', this)">Active Recovery</button>
+    </div>
+
+    <div id="session-display"></div>
+  </div>
+
+  <!-- ══════════════ CORRECTIVE TAB ══════════════ -->
+  <div id="tab-corrective" class="tab-panel">
+    <div class="section-label">Mandatory Corrective Protocol — Done Before Every Session (10 min)</div>
+    <p style="color:var(--text-dim); font-size:13px; margin-bottom:4px;">You have weak lower body, tight hip flexors, and underdeveloped calves. These three areas will limit both your running economy and lifting performance if not addressed. Do this every session — no exceptions in Phase 1.</p>
+
+    <div class="corrective-grid">
+      <div class="corrective-card">
+        <h3>Hip Flexors</h3>
+        <div class="target">Target · Iliopsoas + TFL tightness</div>
+        <div class="corrective-item">90/90 Hip Switch <span class="corrective-rx">2×60s each side</span></div>
+        <div class="corrective-item">Kneeling Hip Flexor Stretch <span class="corrective-rx">3×45s each</span></div>
+        <div class="corrective-item">Dead Bug (Core anti-extension) <span class="corrective-rx">3×8 each side</span></div>
+        <div class="corrective-item">Hip CARs (Controlled Articular Rotation) <span class="corrective-rx">2×5 each</span></div>
+        <div class="corrective-item">Glute Bridge March <span class="corrective-rx">3×10 each leg</span></div>
+      </div>
+
+      <div class="corrective-card">
+        <h3>Calves</h3>
+        <div class="target">Target · Gastrocnemius + Soleus</div>
+        <div class="corrective-item">Straight-leg calf raise (eccentric focus) <span class="corrective-rx">3×15 slow</span></div>
+        <div class="corrective-item">Bent-knee calf raise (soleus) <span class="corrective-rx">3×15</span></div>
+        <div class="corrective-item">Ankle circles + dorsiflexion drill <span class="corrective-rx">2×10 each</span></div>
+        <div class="corrective-item">Single-leg balance on slightly bent knee <span class="corrective-rx">3×30s each</span></div>
+        <div class="corrective-item">Banded ankle dorsiflexion stretch <span class="corrective-rx">2×45s each</span></div>
+      </div>
+
+      <div class="corrective-card">
+        <h3>Lower Body Stability</h3>
+        <div class="target">Target · Glutes + Hip Abductors + Hamstrings</div>
+        <div class="corrective-item">Clamshells (banded if available) <span class="corrective-rx">3×15 each</span></div>
+        <div class="corrective-item">Side-lying hip abduction <span class="corrective-rx">3×12 each</span></div>
+        <div class="corrective-item">Single-leg RDL bodyweight <span class="corrective-rx">3×8 each</span></div>
+        <div class="corrective-item">Wall sit <span class="corrective-rx">3×45s</span></div>
+        <div class="corrective-item">Box step-up (bodyweight, slow) <span class="corrective-rx">3×10 each</span></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:28px">Phase Corrective Progression</div>
+    <div class="info-grid">
+      <div class="info-box">
+        <h3>Phase 1 (Wks 1–4)</h3>
+        <p>All three corrective blocks before every session. Full 10 minutes. Non-negotiable. This is where you build the foundation your runs will depend on.</p>
+      </div>
+      <div class="info-box">
+        <h3>Phase 2 (Wks 5–9)</h3>
+        <p>Hip flexor and calf blocks remain mandatory pre-session. Lower body stability block moves to post-session or can be embedded as warm-up sets within the lifting session.</p>
+      </div>
+      <div class="info-box">
+        <h3>Phase 3 (Wks 10–12)</h3>
+        <p>Correctives become maintenance — 5 minutes pre-session focused on whichever area feels most restricted that day. Trust your body signals here.</p>
+      </div>
+      <div class="info-box">
+        <h3>Red Flag Signals</h3>
+        <ul>
+          <li>Sharp knee pain during step-ups → stop, run easy only, no squats</li>
+          <li>Anterior hip pain after runs → extra hip flexor work, reduce run volume</li>
+          <li>Calf tightness that doesn't resolve in 48hrs → rest, ice, see a provider</li>
+          <li>Lower back fatigue → dead bug and bird dog priority that week</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ NOTES TAB ══════════════ -->
+  <div id="tab-notes" class="tab-panel">
+    <div class="section-label">Coach Notes — Read Before You Start</div>
+    <div class="info-grid">
+      <div class="info-box">
+        <h3>On Being a Junior Runner</h3>
+        <p>You're not a beginner at training — you're a beginner at running. Those are different. Your cardiovascular ceiling is higher than a true novice, but your connective tissue (tendons, ligaments, plantar fascia) hasn't adapted to impact loading yet.</p>
+        <br>
+        <p>The run/walk protocol isn't a crutch — it's injury prevention. Most new runners get hurt because they run continuously before their tissue is ready. You will not skip the walk intervals in Phase 1.</p>
+      </div>
+      <div class="info-box">
+        <h3>On 2 Months Off</h3>
+        <p>Your neuromuscular patterns are mostly intact. You'll feel strength coming back fast in weeks 1–3. Don't chase old PRs in Phase 1 — your tendons and stabilizers lag behind your perceived strength by 2–4 weeks.</p>
+        <br>
+        <p>Load at 60–70% of what you think your max is in week 1. You'll be back to working weights by week 3 naturally.</p>
+      </div>
+      <div class="info-box">
+        <h3>On the Equipment Transition</h3>
+        <p>Home gym gets you through Phase 1 fully. By week 5, you'll want barbell squats, Romanian deadlifts, and cable work for the lower body volume this plan requires. The commercial gym at week 5 is on purpose — it's when the program demands it.</p>
+        <br>
+        <p>Don't buy the membership early just to have it. Use the consistency milestone as the gate.</p>
+      </div>
+      <div class="info-box">
+        <h3>On Leaning Up While Running</h3>
+        <p>Running burns fewer calories than people expect at slow speeds. Leaning up here comes from <span class="highlight">lifting intensity + moderate deficit + protein</span>, not mileage.</p>
+        <br>
+        <p>Hit your protein target first. Everything else — carb timing, meal frequency — is secondary. The food scale habit you're building is the right move.</p>
+      </div>
+      <div class="info-box">
+        <h3>On Whoop Data</h3>
+        <p>Your HRV baseline matters more than the number. If your baseline HRV is 45ms and you wake up at 38ms with a yellow score, that's a signal. The app's recovery percentage accounts for this — trust the percentage over the raw HRV number.</p>
+        <br>
+        <p>Two consecutive red days is a hard stop. One red day, you can train easy. Three in a row means something systemic is wrong — sleep, nutrition, or stress.</p>
+      </div>
+      <div class="info-box">
+        <h3>Race Week Protocol (Wk 12)</h3>
+        <p><span class="highlight">Tuesday:</span> 2 mile easy run, nothing more.<br>
+        <span class="highlight">Wednesday:</span> Correctives only, 10 min walk.<br>
+        <span class="highlight">Thursday:</span> Full rest. No gym.<br>
+        <span class="highlight">Friday:</span> Optional 10-min easy walk.<br>
+        <span class="highlight">Saturday:</span> 5K. Start at conversational pace. Don't go out fast.</p>
+        <br>
+        <p>Eat a normal meal 2–3 hours before. No experiments. Sleep 8+ hours Thursday night.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ LOG TAB ══════════════ -->
+  <div id="tab-log" class="tab-panel">
+    <div class="section-label">Training Log — 12-Week Recovery History</div>
+    <p style="color:var(--text-dim);font-size:13px;margin-bottom:4px;">Every time you generate a prescription, hit Save to Log to record it. Your data persists in this browser even after closing.</p>
+
+    <div class="log-stats" id="log-stats">
+      <div class="log-stat-card"><div class="ls-label">Days Logged</div><div class="ls-value" id="ls-days">0</div><div class="ls-sub">of 84 total</div></div>
+      <div class="log-stat-card"><div class="ls-label">Avg Recovery</div><div class="ls-value" id="ls-avg-rec">—</div><div class="ls-sub">0–100</div></div>
+      <div class="log-stat-card"><div class="ls-label">Avg HRV</div><div class="ls-value" id="ls-avg-hrv">—</div><div class="ls-sub">milliseconds</div></div>
+      <div class="log-stat-card"><div class="ls-label">Green Days</div><div class="ls-value" id="ls-green">0</div><div class="ls-sub">full training days</div></div>
+    </div>
+
+    <div class="log-table" id="log-table">
+      <div class="log-entry header">
+        <div class="log-cell">Date</div>
+        <div class="log-cell">Recovery</div>
+        <div class="log-cell">HRV</div>
+        <div class="log-cell">Strain</div>
+        <div class="log-cell">Status</div>
+        <div class="log-cell">Actions</div>
+      </div>
+      <div id="log-rows"><div class="log-empty">No entries yet — generate a prescription and save it to start your log.</div></div>
+    </div>
+
+    <div class="log-actions">
+      <button class="clear-btn" onclick="clearLog()">Clear All Entries</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── TAB NAVIGATION ──
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── WHOOP LOGIC ──
+function analyzeWhoop() {
+  const recovery = parseInt(document.getElementById('recovery').value);
+  const hrv = parseInt(document.getElementById('hrv').value);
+  const strain = parseFloat(document.getElementById('strain').value);
+
+  if (isNaN(recovery)) {
+    alert('Enter your recovery score to generate a prescription.');
+    return;
+  }
+
+  let status, color, dotColor, lift, run, corrective, note;
+
+  if (recovery >= 67) {
+    status = 'GREEN — TRAIN AS PROGRAMMED';
+    dotColor = 'var(--green)';
+    color = 'var(--green)';
+    lift = 'Full programmed volume and intensity. Hit all sets and reps. AMRAP on final sets if feeling strong.';
+    run = 'Full run session as scheduled. Push interval durations if feeling good.';
+    corrective = 'Full 10-min corrective block before session. Do not skip.';
+    note = 'Your body is recovered. This is the day to earn adaptation. Train hard, recover well tonight — aim for 7–9 hrs sleep.';
+  } else if (recovery >= 34) {
+    status = 'YELLOW — MODIFIED TRAINING';
+    dotColor = 'var(--yellow)';
+    color = 'var(--yellow)';
+    lift = 'Reduce volume by 20%. Drop one set per exercise. Keep intensity (weight) the same — no AMRAP finishers today.';
+    run = 'Run at easy conversational pace only. No speed work. Reduce total distance by 25%.';
+    corrective = 'Full corrective block — this is especially important when HRV is suppressed.';
+    note = strain > 14
+      ? 'Yesterday was a high-strain day — this yellow score makes sense. Reduce today\'s load, prioritize sleep tonight, and eat at or above maintenance.'
+      : 'Something is stressing your system (sleep, life stress, early illness). Train smart today, not hard. Adaptation still happens at reduced loads.';
+  } else {
+    status = 'RED — ACTIVE RECOVERY ONLY';
+    dotColor = 'var(--red)';
+    color = 'var(--red)';
+    lift = 'No lifting today. Your nervous system needs recovery, not more stress.';
+    run = '20-minute easy walk only. No running. Keep HR below 120 bpm.';
+    corrective = 'Light corrective work only — hip flexors and calves, easy holds. No loading.';
+    note = 'Red is not failure — it\'s data. Pushing through red scores increases injury risk and delays adaptation. Eat well, sleep 8+ hours, and come back tomorrow. If you see red 3 days in a row, look at sleep quality, caloric intake, and life stress — something structural is off.';
+  }
+
+  document.getElementById('rx-status').innerHTML = `
+    <div class="status-dot" style="background:${dotColor}; box-shadow: 0 0 10px ${dotColor}55;"></div>
+    <div class="status-label" style="color:${color}">${status}</div>
+    ${hrv ? `<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:auto">HRV: ${hrv}ms · Yesterday Strain: ${isNaN(strain) ? '—' : strain}</div>` : ''}
+  `;
+
+  document.getElementById('rx-grid').innerHTML = `
+    <div class="rx-item"><div class="rx-label">Lifting</div><div class="rx-value">${lift}</div></div>
+    <div class="rx-item"><div class="rx-label">Running</div><div class="rx-value">${run}</div></div>
+    <div class="rx-item"><div class="rx-label">Corrective Work</div><div class="rx-value">${corrective}</div></div>
+    <div class="rx-item"><div class="rx-label">Recovery Score</div><div class="rx-value" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:${color}">${recovery}<span style="font-size:16px;color:var(--text-dim)"> / 100</span></div></div>
+  `;
+
+  document.getElementById('rx-note').innerHTML = `<strong style="color:var(--accent)">Coach Note:</strong> ${note}`;
+  document.getElementById('prescription').classList.add('visible');
+}
+
+// ── SESSION BUILDER ──
+let currentDay = 'fullbody';
+let currentPhase = '1';
+
+function selectDay(day, btn) {
+  currentDay = day;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSession();
+}
+
+document.getElementById('phase-select').addEventListener('change', function() {
+  currentPhase = this.value;
+  updateDayButtons();
+  renderSession();
+});
+
+function updateDayButtons() {
+  const sel = document.getElementById('day-selector');
+  if (currentPhase === '1') {
+    sel.innerHTML = `
+      <button class="day-btn ${currentDay==='fullbody'?'active':''}" onclick="selectDay('fullbody', this)">Full Body Lift</button>
+      <button class="day-btn ${currentDay==='run'?'active':''}" onclick="selectDay('run', this)">Run Day</button>
+      <button class="day-btn ${currentDay==='rest'?'active':''}" onclick="selectDay('rest', this)">Active Recovery</button>
+    `;
+  } else if (currentPhase === '2') {
+    sel.innerHTML = `
+      <button class="day-btn ${currentDay==='upper'?'active':''}" onclick="selectDay('upper', this)">Upper Body</button>
+      <button class="day-btn ${currentDay==='lower'?'active':''}" onclick="selectDay('lower', this)">Lower Body</button>
+      <button class="day-btn ${currentDay==='run'?'active':''}" onclick="selectDay('run', this)">Run Day</button>
+      <button class="day-btn ${currentDay==='rest'?'active':''}" onclick="selectDay('rest', this)">Active Recovery</button>
+    `;
+  } else {
+    sel.innerHTML = `
+      <button class="day-btn ${currentDay==='upper'?'active':''}" onclick="selectDay('upper', this)">Upper Body</button>
+      <button class="day-btn ${currentDay==='lower'?'active':''}" onclick="selectDay('lower', this)">Lower Body</button>
+      <button class="day-btn ${currentDay==='run'?'active':''}" onclick="selectDay('run', this)">Run Day (Taper)</button>
+      <button class="day-btn ${currentDay==='rest'?'active':''}" onclick="selectDay('rest', this)">Race Prep Rest</button>
+    `;
+  }
+}
+
+function exRow(num, name, note, sets, reps, rest) {
+  return `<div class="exercise-row">
+    <div class="ex-num">${num}</div>
+    <div class="ex-name">${name}${note?`<span class="ex-note">${note}</span>`:''}</div>
+    <div class="ex-sets">${sets}</div>
+    <div class="ex-reps">${reps}</div>
+    <div class="ex-rest">${rest}</div>
+  </div>`;
+}
+
+function tableHeader() {
+  return `<div class="table-header">
+    <div class="th-cell">#</div>
+    <div class="th-cell">Exercise</div>
+    <div class="th-cell">Sets</div>
+    <div class="th-cell">Reps</div>
+    <div class="th-cell">Rest</div>
+  </div>`;
+}
+
+function sessionCard(title, meta, content) {
+  return `<div class="session-card">
+    <div class="session-header">
+      <div class="session-title">${title}</div>
+      <div class="session-meta">${meta}</div>
+    </div>
+    ${content}
+  </div>`;
+}
+
+function runBlock(intervals, totalNote) {
+  const rows = intervals.map(i => `
+    <div class="run-interval-row">
+      <div class="interval-badge ${i.type==='run'?'badge-run':'badge-walk'}">${i.type==='run'?'RUN':'WALK'}</div>
+      <div class="interval-desc">${i.desc}</div>
+      <div class="interval-time">${i.time}</div>
+    </div>
+  `).join('');
+  return `<div class="run-block">
+    ${rows}
+    <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">${totalNote}</div>
+  </div>`;
+}
+
+const SESSIONS = {
+  '1': {
+    fullbody: () => sessionCard('FULL BODY LIFT', '45–55 min · Phase 1', `
+      <div class="section-divider">WARM-UP — 10 min corrective block (see Corrective tab)</div>
+      ${tableHeader()}
+      <div class="exercise-list">
+        ${exRow(1,'Goblet Squat','Dumbbell — slow 3s down','3','12','90s')}
+        ${exRow(2,'Romanian Deadlift','Dumbbell — feel the hamstring stretch','3','12','90s')}
+        ${exRow(3,'DB Bench Press or Floor Press','Use what you have','3','12','75s')}
+        ${exRow(4,'DB Bent-Over Row','Brace core, no swinging','3','12','75s')}
+        ${exRow(5,'Standing DB Shoulder Press','','3','10','75s')}
+        ${exRow(6,'Single-Leg Calf Raise','Bodyweight, slow eccentric (3s down)','3','15 each','60s')}
+        ${exRow(7,'Plank Hold','Core stability','3','40s','60s')}
+      </div>
+      <div class="section-divider">COOL-DOWN — 5 min hip flexor stretch + calf stretch</div>
+    `),
+    run: () => sessionCard('RUN DAY', 'Phase 1 · Run/Walk Protocol', `
+      <div class="section-divider">PRE-RUN — 5 min hip flexor correctives + ankle circles</div>
+      ${runBlock([
+        {type:'walk', desc:'Warm-up walk — easy pace', time:'5 min'},
+        {type:'run', desc:'Run interval — comfortable, can hold a conversation', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Recovery walk', time:'2 min'},
+        {type:'run', desc:'Run interval', time:'1 min'},
+        {type:'walk', desc:'Cool-down walk', time:'3 min'},
+      ], '8 × 1 min run / 2 min walk · Total ~30 min · Wk 2: add 2 rounds')}
+      <div class="section-divider">POST-RUN — 5 min calf stretch + quad stretch</div>
+    `),
+    rest: () => sessionCard('ACTIVE RECOVERY', '20–30 min · No intensity', `
+      <div class="run-block">
+        <div class="run-interval-row"><div class="interval-badge badge-walk">WALK</div><div class="interval-desc">Easy walk — outdoors if possible, flat surface</div><div class="interval-time">20 min</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Full hip flexor corrective block</div><div class="interval-time">10 min</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Calf stretching — gastroc + soleus both sides</div><div class="interval-time">5 min</div></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">No HR spike. No exertion. This day is building recovery capacity.</div>
+      </div>
+    `)
+  },
+  '2': {
+    upper: () => sessionCard('UPPER BODY', '45–55 min · Phase 2', `
+      <div class="section-divider">WARM-UP — 5 min corrective (hip flexors + calf raise activation)</div>
+      ${tableHeader()}
+      <div class="exercise-list">
+        ${exRow(1,'Barbell or DB Bench Press','Progressive load this phase','4','8','2 min')}
+        ${exRow(2,'Barbell or DB Row','Heavy and controlled','4','8','2 min')}
+        ${exRow(3,'Incline DB Press','','3','10','90s')}
+        ${exRow(4,'Lat Pulldown or Pull-Up','Cable preferred with gym access','3','10','90s')}
+        ${exRow(5,'Lateral Raise','Slow and controlled, not swinging','3','15','60s')}
+        ${exRow(6,'Face Pull or Band Pull-Apart','Shoulder health — do not skip','3','15','60s')}
+        ${exRow(7,'Tricep Pushdown + Curl Superset','','3','12 each','60s')}
+      </div>
+    `),
+    lower: () => sessionCard('LOWER BODY', '50–60 min · Phase 2', `
+      <div class="section-divider">WARM-UP — Full 10 min corrective block — priority this day</div>
+      ${tableHeader()}
+      <div class="exercise-list">
+        ${exRow(1,'Barbell Back Squat or Goblet Squat','Build to heavy-ish sets of 8','4','8','2 min')}
+        ${exRow(2,'Romanian Deadlift','Barbell preferred now','4','8','2 min')}
+        ${exRow(3,'Walking Lunges','DB or bodyweight','3','10 each','90s')}
+        ${exRow(4,'Leg Press','High foot placement — glute emphasis','3','12','90s')}
+        ${exRow(5,'Leg Curl','Machine or Nordic if available','3','12','90s')}
+        ${exRow(6,'Standing Calf Raise','Machine — loaded, slow eccentric','4','15','60s')}
+        ${exRow(7,'Single-Leg RDL','Bodyweight or light DB','3','10 each','60s')}
+      </div>
+    `),
+    run: () => sessionCard('RUN DAY', 'Phase 2 · Extended Intervals', `
+      <div class="section-divider">PRE-RUN — 5 min hip flexor correctives</div>
+      ${runBlock([
+        {type:'walk', desc:'Warm-up walk', time:'5 min'},
+        {type:'run', desc:'Run interval — steady conversational pace', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Recovery walk', time:'1 min'},
+        {type:'run', desc:'Run interval', time:'2 min'},
+        {type:'walk', desc:'Cool-down walk', time:'3 min'},
+      ], '8 × 2 min run / 1 min walk · Wk 8: replace with 10 min continuous / 2 min walk / repeat')}
+    `),
+    rest: () => sessionCard('ACTIVE RECOVERY', '20–30 min · Phase 2', `
+      <div class="run-block">
+        <div class="run-interval-row"><div class="interval-badge badge-walk">WALK</div><div class="interval-desc">20–30 min easy walk or light bike</div><div class="interval-time">25 min</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Hip flexor + calf corrective block</div><div class="interval-time">8 min</div></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">4-day weeks create cumulative fatigue. This day is productive rest — treat it seriously.</div>
+      </div>
+    `)
+  },
+  '3': {
+    upper: () => sessionCard('UPPER BODY — TAPER', '40–50 min · Phase 3', `
+      <div class="section-divider">WARM-UP — 5 min corrective (feel-based)</div>
+      ${tableHeader()}
+      <div class="exercise-list">
+        ${exRow(1,'Bench Press','Keep weight same, drop 1 set','3','6','2 min')}
+        ${exRow(2,'Row','Keep weight same, drop 1 set','3','6','2 min')}
+        ${exRow(3,'Shoulder Press','','3','8','90s')}
+        ${exRow(4,'Lat Pulldown','','3','10','90s')}
+        ${exRow(5,'Band work — face pulls, pull-aparts','Shoulder health maintenance','2','15','60s')}
+      </div>
+      <div class="section-divider">Note: No AMRAP sets in Phase 3. Leave 2–3 reps in the tank always.</div>
+    `),
+    lower: () => sessionCard('LOWER BODY — TAPER', '40–50 min · Phase 3', `
+      <div class="section-divider">WARM-UP — Full corrective block — legs need it before race week</div>
+      ${tableHeader()}
+      <div class="exercise-list">
+        ${exRow(1,'Squat','Same weight as peak, 1 fewer set','3','6','2 min')}
+        ${exRow(2,'Romanian Deadlift','','3','6','2 min')}
+        ${exRow(3,'Leg Press','','2','10','90s')}
+        ${exRow(4,'Calf Raise','Maintain — these directly support running','3','15','60s')}
+        ${exRow(5,'Single-Leg Balance Work','Proprioception for run prep','3','30s each','45s')}
+      </div>
+    `),
+    run: () => sessionCard('RUN — TAPER / PEAK', 'Phase 3 · Continuous Running', `
+      <div class="section-divider">PRE-RUN — 5 min easy correctives</div>
+      ${runBlock([
+        {type:'walk', desc:'Warm-up walk', time:'5 min'},
+        {type:'run', desc:'Continuous run — easy conversational pace. Wk 10: 25 min', time:'25 min'},
+        {type:'walk', desc:'Recovery walk', time:'3 min'},
+        {type:'run', desc:'Optional second run block if feeling strong — Wk 11: full 5K practice', time:'10–15 min'},
+        {type:'walk', desc:'Cool-down walk', time:'5 min'},
+      ], 'Wk 10: 25 min continuous · Wk 11: full 5K practice run · Wk 12: 2 mi easy only (race week)')}
+    `),
+    rest: () => sessionCard('RACE WEEK REST', 'Week 12 · Priority: Sleep and Nutrition', `
+      <div class="run-block">
+        <div class="run-interval-row"><div class="interval-badge badge-walk">REST</div><div class="interval-desc">No lifting. No running. Full rest Thursday before race.</div><div class="interval-time">Full day</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">EAT</div><div class="interval-desc">Eat at maintenance — don't restrict calories race week</div><div class="interval-time">All day</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">SLEEP</div><div class="interval-desc">8+ hours. Non-negotiable for performance.</div><div class="interval-time">Tonight</div></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--green)">You've put in the 12 weeks. Race day is just showing up.</div>
+      </div>
+    `)
+  }
+};
+
+function renderSession() {
+  const phase = document.getElementById('phase-select').value;
+  const dayFn = SESSIONS[phase][currentDay];
+  const display = document.getElementById('session-display');
+  if (dayFn) {
+    display.innerHTML = dayFn();
+  } else {
+    // fallback to first available
+    const firstKey = Object.keys(SESSIONS[phase])[0];
+    currentDay = firstKey;
+    display.innerHTML = SESSIONS[phase][firstKey]();
+  }
+}
+
+// Init
+renderSession();
+
+// ── TRAINING LOG ──
+const LOG_KEY = 'pulse_training_log';
+
+function getLog() {
+  try { return JSON.parse(localStorage.getItem(LOG_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveLog(entries) {
+  localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+}
+
+function saveToLog() {
+  const recovery = parseInt(document.getElementById('recovery').value);
+  const hrv = parseInt(document.getElementById('hrv').value);
+  const strain = parseFloat(document.getElementById('strain').value);
+  if (isNaN(recovery)) return;
+
+  let statusText;
+  if (recovery >= 67) statusText = 'GREEN';
+  else if (recovery >= 34) statusText = 'YELLOW';
+  else statusText = 'RED';
+
+  const entry = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}),
+    dateRaw: new Date().toISOString().split('T')[0],
+    recovery,
+    hrv: isNaN(hrv) ? null : hrv,
+    strain: isNaN(strain) ? null : strain,
+    status: statusText,
+  };
+
+  const entries = getLog();
+  // Prevent duplicate for same calendar day
+  const today = entry.dateRaw;
+  const filtered = entries.filter(e => e.dateRaw !== today);
+  filtered.unshift(entry);
+  saveLog(filtered);
+
+  const confirm = document.getElementById('save-confirm');
+  confirm.style.display = 'inline';
+  setTimeout(() => { confirm.style.display = 'none'; }, 2500);
+
+  renderLog();
+}
+
+function deleteEntry(id) {
+  const entries = getLog().filter(e => e.id !== id);
+  saveLog(entries);
+  renderLog();
+}
+
+function clearLog() {
+  if (confirm('Clear all log entries? This cannot be undone.')) {
+    localStorage.removeItem(LOG_KEY);
+    renderLog();
+  }
+}
+
+function renderLog() {
+  const entries = getLog();
+  const rowsEl = document.getElementById('log-rows');
+
+  if (entries.length === 0) {
+    rowsEl.innerHTML = '<div class="log-empty">No entries yet — generate a prescription and save it to start your log.</div>';
+  } else {
+    rowsEl.innerHTML = entries.map(e => {
+      const scoreClass = e.status === 'GREEN' ? 'log-score-green' : e.status === 'YELLOW' ? 'log-score-yellow' : 'log-score-red';
+      return `<div class="log-entry">
+        <div class="log-cell" style="font-family:'DM Mono',monospace;font-size:12px;">${e.date}</div>
+        <div class="log-cell ${scoreClass}">${e.recovery}</div>
+        <div class="log-cell" style="color:var(--text-mid)">${e.hrv ?? '—'}</div>
+        <div class="log-cell" style="color:var(--text-mid)">${e.strain ?? '—'}</div>
+        <div class="log-cell"><span class="${scoreClass}" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;">${e.status}</span></div>
+        <div class="log-cell"><button onclick="deleteEntry(${e.id})" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;">REMOVE</button></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Stats
+  const greens = entries.filter(e => e.status === 'GREEN').length;
+  const avgRec = entries.length ? Math.round(entries.reduce((s,e) => s + e.recovery, 0) / entries.length) : null;
+  const hrvEntries = entries.filter(e => e.hrv !== null);
+  const avgHrv = hrvEntries.length ? Math.round(hrvEntries.reduce((s,e) => s + e.hrv, 0) / hrvEntries.length) : null;
+
+  document.getElementById('ls-days').textContent = entries.length;
+  document.getElementById('ls-avg-rec').textContent = avgRec ?? '—';
+  document.getElementById('ls-avg-hrv').textContent = avgHrv ?? '—';
+  document.getElementById('ls-green').textContent = greens;
+}
+
+// Show save button after prescription is generated — patch analyzeWhoop
+const _origAnalyze = analyzeWhoop;
+analyzeWhoop = function() {
+  _origAnalyze();
+  const saveBtn = document.getElementById('save-btn');
+  if (saveBtn) saveBtn.style.display = 'inline-block';
+};
+
+// Init log on load
+renderLog();
+
+</script>
+</body>
+</html>
