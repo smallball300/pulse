@@ -467,13 +467,6 @@
     outline: none;
   }
 
-  .session-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
   .session-header {
     padding: 18px 24px;
     border-bottom: 1px solid var(--border);
@@ -694,6 +687,49 @@
 
   .highlight { color: var(--accent); font-weight: 500; }
 
+  .table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+
+  .table-scroll table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+  }
+
+  .table-scroll .log-table {
+    min-width: 640px;
+  }
+
+  .session-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .session-content-scroll {
+    padding: 0 24px 24px;
+    overflow-x: auto;
+  }
+
+  .session-content-scroll-inner {
+    min-width: 640px;
+  }
+
+  .session-card::-webkit-scrollbar,
+  .table-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .session-card::-webkit-scrollbar-thumb,
+  .table-scroll::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     header { padding: 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -704,7 +740,18 @@
     .rx-grid { grid-template-columns: 1fr; }
     .corrective-grid { grid-template-columns: 1fr; }
     .info-grid { grid-template-columns: 1fr; }
-    .exercise-row, .table-header { grid-template-columns: 24px 1fr 60px 80px 90px; }
+    .exercise-row, .table-header { grid-template-columns: 24px 1fr 60px 70px 80px 90px; }
+    .header-left h1 { font-size: 38px; }
+    .header-left .subtitle { font-size: 9px; letter-spacing: 2px; }
+    nav button { font-size: 10px; padding: 12px 14px; }
+  }
+
+  @media (max-width: 540px) {
+    main { padding: 16px; }
+    .session-content-scroll-inner,
+    .table-scroll table {
+      min-width: 520px;
+    }
   }
 
   /* ── LOG TAB ── */
@@ -1021,6 +1068,7 @@
   <!-- ══════════════ SCHEDULE TAB ══════════════ -->
   <div id="tab-schedule" class="tab-panel">
     <div class="section-label">12-Week Week-by-Week Plan</div>
+    <div class="table-scroll">
     <table class="week-table">
       <thead>
         <tr>
@@ -1131,6 +1179,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
   <!-- ══════════════ SESSIONS TAB ══════════════ -->
@@ -1279,6 +1328,7 @@
       <div class="log-stat-card"><div class="ls-label">Green Days</div><div class="ls-value" id="ls-green">0</div><div class="ls-sub">full training days</div></div>
     </div>
 
+    <div class="table-scroll">
     <div class="log-table" id="log-table">
       <div class="log-entry header">
         <div class="log-cell">Date</div>
@@ -1290,6 +1340,7 @@
         <div class="log-cell">Actions</div>
       </div>
       <div id="log-rows"><div class="log-empty">No entries yet. Generate a prescription and save it to start your log.</div></div>
+    </div>
     </div>
 
     <div class="log-actions">
@@ -1532,7 +1583,11 @@ function sessionCard(title, meta, content) {
       <div class="session-title">${title}</div>
       <div class="session-meta">${meta}</div>
     </div>
-    ${content}
+    <div class="session-content-scroll">
+      <div class="session-content-scroll-inner">
+        ${content}
+      </div>
+    </div>
   </div>`;
 }
 
