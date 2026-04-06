@@ -827,55 +827,11 @@
     display: none;
   }
 
-  .ai-config {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 16px;
-    margin-bottom: 18px;
-    display: grid;
-    gap: 8px;
-  }
-
-  .ai-config label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  .ai-config input {
-    background: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 8px 10px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .ai-config button {
-    background: var(--accent);
-    border: none;
-    color: var(--black);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 8px 12px;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-
-  .ai-config small {
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-
   .ai-usage {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     color: var(--text-mid);
+    margin-bottom: 8px;
   }
 
   .ai-coach {
@@ -968,16 +924,6 @@
       <button class="save-btn" id="save-btn" onclick="saveToLog()" style="display:none;">↓ SAVE TO LOG</button>
       <span class="save-confirm" id="save-confirm">✓ Saved to log</span>
     </div>
-    <div class="ai-config">
-      <label for="deepinfra-key">DeepInfra API Key (stored locally)</label>
-      <input type="password" id="deepinfra-key" placeholder="deepinfra_xxx">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button type="button" onclick="saveApiKey()">Save Key</button>
-        <button type="button" class="clear-btn" style="margin-top:0" onclick="clearApiKey()">Remove Key</button>
-      </div>
-      <small>Each AI overlay call uses Meta Llama 3 8B Instruct on DeepInfra (~$0.00005/call). Staying under &lt;$5/month means fewer than <span id="ai-max-calls"></span> runs.</small>
-      <div class="ai-usage" id="ai-usage"></div>
-    </div>
 
     <div class="prescription-box" id="prescription">
       <div class="rx-status" id="rx-status"></div>
@@ -985,7 +931,8 @@
       <div class="rx-note" id="rx-note"></div>
       <div class="ai-coach" id="ai-coach">
         <h4>AI Coaching Overlay</h4>
-        <p id="ai-coach-body">Add your API key above and generate a prescription to see the AI add-on.</p>
+        <div class="ai-usage" id="ai-usage"></div>
+        <p id="ai-coach-body">AI overlay will run automatically after you generate a prescription.</p>
       </div>
     </div>
   </div>
@@ -1352,35 +1299,9 @@
 </main>
 
 <script>
-const DEEPINFRA_MODEL = 'meta-llama/Meta-Llama-3-8B-Instruct';
 const AI_COST_PER_CALL = 0.00005; // USD
 const MONTHLY_AI_BUDGET = 5; // USD
 const AI_USAGE_KEY_PREFIX = 'pulse_ai_usage_';
-const API_KEY_STORAGE_KEY = 'pulse_deepinfra_key';
-
-function getSavedApiKey() {
-  return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
-}
-
-function saveApiKey() {
-  const input = document.getElementById('deepinfra-key');
-  if (!input) return;
-  const value = input.value.trim();
-  if (!value) {
-    alert('Enter a valid DeepInfra API key before saving.');
-    return;
-  }
-  localStorage.setItem(API_KEY_STORAGE_KEY, value);
-  alert('API key saved locally.');
-}
-
-function clearApiKey() {
-  localStorage.removeItem(API_KEY_STORAGE_KEY);
-  const input = document.getElementById('deepinfra-key');
-  if (input) input.value = '';
-  const aiCoach = document.getElementById('ai-coach');
-  if (aiCoach) aiCoach.style.display = 'none';
-}
 
 function aiUsageKey() {
   return `${AI_USAGE_KEY_PREFIX}${new Date().toISOString().slice(0,7)}`;
@@ -1403,14 +1324,10 @@ function aiBudgetExceeded() {
 
 function updateAiUsageBanner() {
   const usageEl = document.getElementById('ai-usage');
-  const maxEl = document.getElementById('ai-max-calls');
   const count = getAiUsageCount();
   if (usageEl) {
     const spend = (count * AI_COST_PER_CALL).toFixed(3);
     usageEl.textContent = `Month-to-date AI calls: ${count} (~$${spend} of $${MONTHLY_AI_BUDGET} budget).`;
-  }
-  if (maxEl) {
-    maxEl.textContent = Math.floor(MONTHLY_AI_BUDGET / AI_COST_PER_CALL);
   }
 }
 
@@ -1418,22 +1335,26 @@ async function runAiCoachOverlay(heuristics, metrics) {
   const aiCoach = document.getElementById('ai-coach');
   const aiBody = document.getElementById('ai-coach-body');
   if (!aiCoach || !aiBody) return;
-  const apiKey = getSavedApiKey();
-  if (!apiKey) {
-    aiCoach.style.display = 'none';
-    return;
-  }
+  aiCoach.style.display = 'block';
   if (aiBudgetExceeded()) {
-    aiCoach.style.display = 'block';
     aiBody.textContent = 'Monthly AI budget (~$5) reached. Clear usage in local storage if you want to override.';
     return;
   }
-  aiCoach.style.display = 'block';
   aiBody.textContent = 'Generating AI overlay via DeepInfra...';
   try {
     const prompt = buildAiPrompt(heuristics, metrics);
-    const response = await fetchDeepInfraPlan(prompt, apiKey);
-    aiBody.textContent = response;
+    const response = await fetch('/api/deepinfra', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || `Server error ${response.status}`);
+    }
+    const data = await response.json();
+    const message = data?.message || data?.error || 'No AI content returned.';
+    aiBody.textContent = message;
     recordAiCall();
   } catch (err) {
     aiBody.textContent = `AI overlay error: ${err.message}`;
@@ -1458,37 +1379,7 @@ Baseline prescription:
 Constraints: Provide <120 words. Give 2 short bullets: (1) training tweak, (2) recovery / lifestyle action. Reference the Whoop metrics directly and keep tone conversational.`.trim();
 }
 
-async function fetchDeepInfraPlan(prompt, apiKey) {
-  const response = await fetch('https://api.deepinfra.com/v1/openai/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: DEEPINFRA_MODEL,
-      max_tokens: 320,
-      temperature: 0.4,
-      messages: [
-        { role: 'system', content: 'You are Alex Williamson’s personal CSCS/physical therapy coach. Provide specific, actionable training adjustments matched to Whoop data, and stay concise.' },
-        { role: 'user', content: prompt }
-      ]
-    })
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`DeepInfra ${response.status}: ${text}`);
-  }
-  const data = await response.json();
-  const content = data?.choices?.[0]?.message?.content?.trim();
-  if (!content) throw new Error('No AI content returned.');
-  return content;
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-  const keyInput = document.getElementById('deepinfra-key');
-  if (keyInput) keyInput.value = getSavedApiKey();
   updateAiUsageBanner();
 });
 
