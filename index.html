@@ -130,7 +130,7 @@
   /* ── WHOOP DASHBOARD ── */
   .whoop-header {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
   }
@@ -501,7 +501,7 @@
 
   .exercise-row {
     display: grid;
-    grid-template-columns: 32px 1fr 80px 100px 120px;
+    grid-template-columns: 32px 1fr 80px 80px 100px 120px;
     gap: 0;
     border-bottom: 1px solid var(--border);
     align-items: center;
@@ -530,7 +530,7 @@
     font-family: 'DM Mono', monospace;
   }
 
-  .ex-sets, .ex-reps, .ex-rest {
+  .ex-sets, .ex-reps, .ex-load, .ex-rest {
     padding: 14px 8px;
     font-family: 'DM Mono', monospace;
     font-size: 12px;
@@ -539,10 +539,11 @@
   }
 
   .ex-sets { color: var(--accent); font-weight: 500; }
+  .ex-load { color: var(--text); font-weight: 500; font-size: 12px; }
 
   .table-header {
     display: grid;
-    grid-template-columns: 32px 1fr 80px 100px 120px;
+    grid-template-columns: 32px 1fr 80px 80px 100px 120px;
     background: var(--off-black);
     border-bottom: 1px solid var(--border);
   }
@@ -826,6 +827,80 @@
     display: none;
   }
 
+  .ai-config {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 18px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .ai-config label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .ai-config input {
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .ai-config button {
+    background: var(--accent);
+    border: none;
+    color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .ai-config small {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .ai-usage {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+
+  .ai-coach {
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--off-black);
+    display: none;
+  }
+
+  .ai-coach h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .ai-coach p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
 </style>
 </head>
 <body>
@@ -833,7 +908,7 @@
 <header>
   <div class="header-left">
     <h1>12-WEEK S&amp;C</h1>
-    <div class="subtitle">Strength &amp; Conditioning Cycle — 5K Finish Goal</div>
+    <div class="subtitle">Strength &amp; Conditioning Cycle (5K finish goal)</div>
   </div>
   <div class="header-right">
     <div class="goal-tag">Lean + Run 5K</div>
@@ -855,42 +930,63 @@
 
   <!-- ══════════════ WHOOP TAB ══════════════ -->
   <div id="tab-whoop" class="tab-panel active">
-    <div class="section-label">Daily Training Prescription — Enter Today's Whoop Metrics</div>
+    <div class="section-label">Whoop Check-In: plug in today's numbers so the plan reacts to me</div>
 
     <div class="whoop-header">
       <div class="metric-card">
         <div class="label">Recovery Score</div>
         <div class="input-row">
-          <input class="metric-input" id="recovery" type="number" min="0" max="100" placeholder="—" maxlength="3">
+          <input class="metric-input" id="recovery" type="number" min="0" max="100" placeholder="" maxlength="3">
         </div>
-        <div class="unit">0–100 · Green ≥67 · Yellow 34–66 · Red ≤33</div>
+        <div class="unit">My green zone starts at 67 · Yellow 34–66 · Red 33 or below</div>
       </div>
       <div class="metric-card">
         <div class="label">HRV (ms)</div>
         <div class="input-row">
-          <input class="metric-input" id="hrv" type="number" min="0" max="300" placeholder="—">
+          <input class="metric-input" id="hrv" type="number" min="0" max="300" placeholder="">
         </div>
-        <div class="unit">Heart rate variability · Your baseline matters more than absolute</div>
+        <div class="unit">HRV context: track how far I am from my rolling baseline, not the absolute</div>
       </div>
       <div class="metric-card">
         <div class="label">Yesterday's Strain</div>
         <div class="input-row">
-          <input class="metric-input" id="strain" type="number" min="0" max="21" step="0.1" placeholder="—">
+          <input class="metric-input" id="strain" type="number" min="0" max="21" step="0.1" placeholder="">
         </div>
-        <div class="unit">0–21 scale · Low &lt;10 · Moderate 10–14 · High &gt;14</div>
+        <div class="unit">0–21 strain scale · &lt;10 easy · 10–14 moderate · &gt;14 high yesterday</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Morning Weight (lb)</div>
+        <div class="input-row">
+          <input class="metric-input" id="weight" type="number" min="100" max="400" step="0.1" placeholder="">
+        </div>
+        <div class="unit">Goal: 175 lb · Log daily weigh-ins here</div>
       </div>
     </div>
 
-    <button class="analyze-btn" onclick="analyzeWhoop()">GENERATE TODAY'S PRESCRIPTION →</button>
+    <button class="analyze-btn" onclick="analyzeWhoop()">TRANSLATE MY WHOOP DATA →</button>
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;">
       <button class="save-btn" id="save-btn" onclick="saveToLog()" style="display:none;">↓ SAVE TO LOG</button>
       <span class="save-confirm" id="save-confirm">✓ Saved to log</span>
+    </div>
+    <div class="ai-config">
+      <label for="deepinfra-key">DeepInfra API Key (stored locally)</label>
+      <input type="password" id="deepinfra-key" placeholder="deepinfra_xxx">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button type="button" onclick="saveApiKey()">Save Key</button>
+        <button type="button" class="clear-btn" style="margin-top:0" onclick="clearApiKey()">Remove Key</button>
+      </div>
+      <small>Each AI overlay call uses Meta Llama 3 8B Instruct on DeepInfra (~$0.00005/call). Staying under &lt;$5/month means fewer than <span id="ai-max-calls"></span> runs.</small>
+      <div class="ai-usage" id="ai-usage"></div>
     </div>
 
     <div class="prescription-box" id="prescription">
       <div class="rx-status" id="rx-status"></div>
       <div class="rx-grid" id="rx-grid"></div>
       <div class="rx-note" id="rx-note"></div>
+      <div class="ai-coach" id="ai-coach">
+        <h4>AI Coaching Overlay</h4>
+        <p id="ai-coach-body">Add your API key above and generate a prescription to see the AI add-on.</p>
+      </div>
     </div>
   </div>
 
@@ -904,9 +1000,9 @@
         <div class="phase-tag">Phase 1 · Weeks 1–4</div>
         <div class="phase-name">Foundation</div>
         <div class="phase-detail">
-          Rebuild movement quality, reintroduce load, and begin the run/walk protocol. Hip flexor and calf correctives are mandatory in every session. Lifting is full-body 3x/week. Run sessions 2x/week using 1:2 run:walk intervals. Nutrition: begin consistent food scale tracking.
+          Weeks 1–4 are my rebuild block: remind joints how to move, restart the run/walk groove, and keep calves + hip flexors honest every single session. Lifts stay full-body 3x/wk with moderate tempo, runs are two days of 1:2 intervals, and the food scale is back on the counter so nutrition habits stick early.
         </div>
-        <div class="phase-weeks">3 days/wk · Low-Moderate Intensity</div>
+        <div class="phase-weeks">3 deliberate sessions/wk · Controlled intensity</div>
       </div>
 
       <div class="phase-card phase2">
@@ -914,9 +1010,9 @@
         <div class="phase-tag">Phase 2 · Weeks 5–9</div>
         <div class="phase-name">Build</div>
         <div class="phase-detail">
-          Increase to 4 training days. Add commercial gym access and heavier compound loading. Run intervals shift to 2:1 and then continuous running by week 8. Lower body emphasis increases. Correctives maintained but become shorter as mobility improves.
+          Weeks 5–9 are the build: bump to four days, use the commercial gym, and load the big compound lifts. Run intervals shift to 2:1 and slide toward continuous work by Week 8. Lower body volume goes up but correctives stay, trimmed to what keeps me moving well.
         </div>
-        <div class="phase-weeks">4 days/wk · Moderate-High Intensity</div>
+        <div class="phase-weeks">4 sessions/wk · Moderate → High</div>
       </div>
 
       <div class="phase-card phase3">
@@ -924,9 +1020,9 @@
         <div class="phase-tag">Phase 3 · Weeks 10–12</div>
         <div class="phase-name">Peak</div>
         <div class="phase-detail">
-          Taper lifting volume by 20%, increase run distance. Week 11 is a full 5K practice run at comfortable pace. Week 12 is your race week — taper run to 2 miles mid-week, rest 2 days out, run your 5K.
+          Weeks 10–12 are the peak. Lifting volume tapers ~20% but intensity stays. Running volume tops out with a Week 11 5K rehearsal, then Week 12 trims to 2 mi easy mid-week, rest, and race. The job is to stay loose and sharp, not chase PRs.
         </div>
-        <div class="phase-weeks">3–4 days/wk · Taper + Peak</div>
+        <div class="phase-weeks">3–4 touch points/wk · Taper + Peak</div>
       </div>
     </div>
 
@@ -935,41 +1031,40 @@
       <div class="info-box">
         <h3>Run Progression Logic</h3>
         <ul>
-          <li>Start: <span class="highlight">0.25 mi continuous</span> → build via run/walk intervals</li>
-          <li>Week 1–4: run 1 min, walk 2 min × 8–10 rounds</li>
-          <li>Week 5–7: run 2 min, walk 1 min × 8 rounds</li>
-          <li>Week 8–9: run 8–12 min continuous, walk 2, repeat</li>
-          <li>Week 10–11: run 20–30 min continuous</li>
-          <li>Week 12: taper to 5K race day</li>
+          <li>Kickoff: <span class="highlight">0.25 mi continuous</span> just to remember what smooth feels like.</li>
+          <li>Weeks 1–4: 1-min run / 2-min walk for 8–10 rounds. Focus on posture, not pace.</li>
+          <li>Weeks 5–7: bump to 2:1 intervals (≈8 rounds) and flirt with 3:1 in Week 7.</li>
+          <li>Weeks 8–9: extend to 8–12 min continuous, 2 min walk, repeat.</li>
+          <li>Weeks 10–11: hold 20–30 min continuous with Week 11 being the practice 5K.</li>
+          <li>Week 12: taper to 2 mi easy + race day legs.</li>
         </ul>
       </div>
       <div class="info-box">
         <h3>Lifting Structure</h3>
         <ul>
-          <li><span class="highlight">Phase 1:</span> Full-body 3x/wk, 3×10–12, moderate load</li>
-          <li><span class="highlight">Phase 2:</span> Upper/Lower split 4x/wk, 4×6–10, progressive</li>
-          <li><span class="highlight">Phase 3:</span> Volume –20%, maintain intensity</li>
-          <li>Lower body priority: glutes, hamstrings, calves every session</li>
-          <li>No leg day isolation from runs — manage fatigue via Whoop</li>
+          <li><span class="highlight">Phase 1:</span> Full-body 3x/wk, 3–4×10–12, slow eccentrics, re-groove movement.</li>
+          <li><span class="highlight">Phase 2:</span> Upper/Lower split 4x/wk, 4–5×6–10, progressive loading.</li>
+          <li><span class="highlight">Phase 3:</span> Pull 20% of the volume, keep intensity, leave reps in the tank.</li>
+          <li>Lower body chain (glutes/hamstrings/calves) shows up every day. No skipping to “save” for runs.</li>
+          <li>Manage fatigue via Whoop instead of guessing, so adjust immediately when it flashes yellow or red.</li>
         </ul>
       </div>
       <div class="info-box">
         <h3>Whoop Recovery Logic</h3>
         <ul>
-          <li><span class="highlight" style="color:var(--green)">Green (67–100):</span> Train as programmed, full effort</li>
-          <li><span class="highlight" style="color:var(--yellow)">Yellow (34–66):</span> Reduce volume 20%, skip AMRAP sets, easy run pace</li>
-          <li><span class="highlight" style="color:var(--red)">Red (0–33):</span> Active recovery only — correctives + 20 min walk</li>
-          <li>Two consecutive red days = mandatory full rest</li>
+          <li><span class="highlight" style="color:var(--green)">Green (67–100):</span> execute the written plan and enjoy the momentum.</li>
+          <li><span class="highlight" style="color:var(--yellow)">Yellow (34–66):</span> peel back ~20% volume, keep weight honest, jog easy.</li>
+          <li><span class="highlight" style="color:var(--red)">Red (0–33):</span> correctives + 20-min walk only. Nothing heroic.</li>
+          <li>Two red days in a row = full rest. Third red = audit sleep, food, stress.</li>
         </ul>
       </div>
       <div class="info-box">
         <h3>Nutrition Guidance</h3>
         <ul>
-          <li>You have the food scale — start tracking protein first</li>
-          <li>Target: <span class="highlight">0.8–1g protein per lb of bodyweight</span></li>
-          <li>Slight caloric deficit (~300 kcal) on non-training days</li>
-          <li>Eat at maintenance on lifting days, slight surplus on long run days</li>
-          <li>Hydration: minimum 80–100oz water/day, more on run days</li>
+          <li>Food scale is out, so weigh protein first and let everything else follow.</li>
+          <li>Target: <span class="highlight">0.8–1g protein per lb bodyweight</span>.</li>
+          <li>~300 kcal deficit on off days, maintenance on lift days, tiny surplus on long run days.</li>
+          <li>Minimum 80–100oz water/day; add more if humidity or long runs spike sweat.</li>
         </ul>
       </div>
     </div>
@@ -1036,7 +1131,7 @@
           <td>Upper/Lower · 4×8 · Heavy</td>
           <td><span class="run-dist">~2.75 mi total</span></td>
           <td>Run 2 min / Walk 1 min × 10</td>
-          <td class="note-text">Manage cumulative fatigue — 4-day week starts here.</td>
+          <td class="note-text">Manage cumulative fatigue; the 4-day week starts here.</td>
         </tr>
         <tr>
           <td><span class="week-badge">W7</span></td>
@@ -1044,7 +1139,7 @@
           <td>Upper/Lower · 5×6 · Heavy</td>
           <td><span class="run-dist">~3 mi total</span></td>
           <td>Run 3 min / Walk 1 min × 6</td>
-          <td class="note-text">First 3-mile run week. High fatigue risk — respect yellow Whoop days.</td>
+          <td class="note-text">First 3-mile run week. High fatigue risk, so respect yellow Whoop days.</td>
         </tr>
         <tr>
           <td><span class="week-badge">W8</span></td>
@@ -1075,7 +1170,7 @@
           <td><span class="phase-pill pill-green">Peak</span></td>
           <td>Upper/Lower · 3×6 · Moderate</td>
           <td><span class="run-dist">5K practice run</span></td>
-          <td>Run full 3.1 miles — any pace, no stops goal</td>
+          <td>Run full 3.1 miles at any pace; the goal is zero stops</td>
           <td class="note-text">Practice 5K. This is your confidence run. Time it for reference only.</td>
         </tr>
         <tr>
@@ -1092,14 +1187,14 @@
 
   <!-- ══════════════ SESSIONS TAB ══════════════ -->
   <div id="tab-sessions" class="tab-panel">
-    <div class="section-label">Session Builder — Select Phase and Day Type</div>
+    <div class="section-label">Session Builder: Select Phase and Day Type</div>
 
     <div class="week-selector">
       <label>Phase</label>
       <select id="phase-select" onchange="renderSession()">
-        <option value="1">Phase 1 — Foundation (Wks 1–4)</option>
-        <option value="2">Phase 2 — Build (Wks 5–9)</option>
-        <option value="3">Phase 3 — Peak (Wks 10–12)</option>
+        <option value="1">Phase 1 · Foundation (Wks 1–4)</option>
+        <option value="2">Phase 2 · Build (Wks 5–9)</option>
+        <option value="3">Phase 3 · Peak (Wks 10–12)</option>
       </select>
     </div>
 
@@ -1114,8 +1209,8 @@
 
   <!-- ══════════════ CORRECTIVE TAB ══════════════ -->
   <div id="tab-corrective" class="tab-panel">
-    <div class="section-label">Mandatory Corrective Protocol — Done Before Every Session (10 min)</div>
-    <p style="color:var(--text-dim); font-size:13px; margin-bottom:4px;">You have weak lower body, tight hip flexors, and underdeveloped calves. These three areas will limit both your running economy and lifting performance if not addressed. Do this every session — no exceptions in Phase 1.</p>
+    <div class="section-label">Mandatory Corrective Protocol (done before every session · 10 min)</div>
+    <p style="color:var(--text-dim); font-size:13px; margin-bottom:4px;">Lower body strength, hip flexor mobility, and calf development are my rate-limiters. If I coast on them, both running economy and lifting suffer. This 10-min block happens before every session, especially through Phase 1.</p>
 
     <div class="corrective-grid">
       <div class="corrective-card">
@@ -1153,15 +1248,15 @@
     <div class="info-grid">
       <div class="info-box">
         <h3>Phase 1 (Wks 1–4)</h3>
-        <p>All three corrective blocks before every session. Full 10 minutes. Non-negotiable. This is where you build the foundation your runs will depend on.</p>
+        <p>All three corrective blocks happen before every session. Full 10 minutes. Non-negotiable. This is the foundation my runs depend on.</p>
       </div>
       <div class="info-box">
         <h3>Phase 2 (Wks 5–9)</h3>
-        <p>Hip flexor and calf blocks remain mandatory pre-session. Lower body stability block moves to post-session or can be embedded as warm-up sets within the lifting session.</p>
+        <p>Hip flexor and calf work stay mandatory pre-session. The stability block shifts to post-session or folds into warm-up sets once I hit Phase 2 volume.</p>
       </div>
       <div class="info-box">
         <h3>Phase 3 (Wks 10–12)</h3>
-        <p>Correctives become maintenance — 5 minutes pre-session focused on whichever area feels most restricted that day. Trust your body signals here.</p>
+        <p>Correctives become maintenance: 5 focused minutes on whatever feels locked up that day. Trust body signals and adjust on the fly.</p>
       </div>
       <div class="info-box">
         <h3>Red Flag Signals</h3>
@@ -1177,47 +1272,47 @@
 
   <!-- ══════════════ NOTES TAB ══════════════ -->
   <div id="tab-notes" class="tab-panel">
-    <div class="section-label">Coach Notes — Read Before You Start</div>
+    <div class="section-label">Coach Notes: Read Before You Start</div>
     <div class="info-grid">
       <div class="info-box">
         <h3>On Being a Junior Runner</h3>
-        <p>You're not a beginner at training — you're a beginner at running. Those are different. Your cardiovascular ceiling is higher than a true novice, but your connective tissue (tendons, ligaments, plantar fascia) hasn't adapted to impact loading yet.</p>
+        <p>I'm not new to training; I'm just early in the running game. Cardio capacity is there, but tendons, fascia, and calves still need graded exposure.</p>
         <br>
-        <p>The run/walk protocol isn't a crutch — it's injury prevention. Most new runners get hurt because they run continuously before their tissue is ready. You will not skip the walk intervals in Phase 1.</p>
+        <p>The run/walk structure is not a crutch. It's the insurance policy that keeps me running in Week 12 instead of rehabbing shin splints in Week 6. No skipping walk intervals in Phase 1.</p>
       </div>
       <div class="info-box">
         <h3>On 2 Months Off</h3>
-        <p>Your neuromuscular patterns are mostly intact. You'll feel strength coming back fast in weeks 1–3. Don't chase old PRs in Phase 1 — your tendons and stabilizers lag behind your perceived strength by 2–4 weeks.</p>
+        <p>Movement patterns are still there even after the break, which means strength will come roaring back in Weeks 1–3. Soft tissue lags behind perception though, so PR chasing is off-limits during the comeback.</p>
         <br>
-        <p>Load at 60–70% of what you think your max is in week 1. You'll be back to working weights by week 3 naturally.</p>
+        <p>Week 1 loading stays around 60–70% of what I <em>think</em> my max is. By Week 3 I'll be at working weights without forcing anything.</p>
       </div>
       <div class="info-box">
         <h3>On the Equipment Transition</h3>
-        <p>Home gym gets you through Phase 1 fully. By week 5, you'll want barbell squats, Romanian deadlifts, and cable work for the lower body volume this plan requires. The commercial gym at week 5 is on purpose — it's when the program demands it.</p>
+        <p>The home setup carries Phase 1 just fine. Week 5 intentionally lines up with commercial gym access so I can squat heavy, RDL with a bar, and get real calf work done.</p>
         <br>
-        <p>Don't buy the membership early just to have it. Use the consistency milestone as the gate.</p>
+        <p>No need to grab the membership sooner because the milestone is “consistency earned,” not “equipment FOMO.”</p>
       </div>
       <div class="info-box">
         <h3>On Leaning Up While Running</h3>
-        <p>Running burns fewer calories than people expect at slow speeds. Leaning up here comes from <span class="highlight">lifting intensity + moderate deficit + protein</span>, not mileage.</p>
+        <p>Slow runs don't burn as much as people think, so leaning out comes from <span class="highlight">lifting intensity + slight deficit + protein discipline</span>, not junk volume on the road.</p>
         <br>
-        <p>Hit your protein target first. Everything else — carb timing, meal frequency — is secondary. The food scale habit you're building is the right move.</p>
+        <p>Protein target is the first checkbox every day. Carb timing and meal frequency only get attention once protein is locked. Keeping the food scale handy makes this automatic.</p>
       </div>
       <div class="info-box">
         <h3>On Whoop Data</h3>
-        <p>Your HRV baseline matters more than the number. If your baseline HRV is 45ms and you wake up at 38ms with a yellow score, that's a signal. The app's recovery percentage accounts for this — trust the percentage over the raw HRV number.</p>
+        <p>Baseline HRV matters way more than the absolute number. If my personal baseline is 45 ms and I wake up at 38 ms with a yellow score, I respect the percentage. Trust the recovery color over ego.</p>
         <br>
-        <p>Two consecutive red days is a hard stop. One red day, you can train easy. Three in a row means something systemic is wrong — sleep, nutrition, or stress.</p>
+        <p>Two red days back-to-back = full stop. A single red day = active recovery only. Three reds in a row means look at the big rocks: sleep debt, food intake, and stress load.</p>
       </div>
       <div class="info-box">
         <h3>Race Week Protocol (Wk 12)</h3>
-        <p><span class="highlight">Tuesday:</span> 2 mile easy run, nothing more.<br>
-        <span class="highlight">Wednesday:</span> Correctives only, 10 min walk.<br>
-        <span class="highlight">Thursday:</span> Full rest. No gym.<br>
-        <span class="highlight">Friday:</span> Optional 10-min easy walk.<br>
-        <span class="highlight">Saturday:</span> 5K. Start at conversational pace. Don't go out fast.</p>
+        <p><span class="highlight">Tuesday:</span> 2 mi easy run, shut it down.<br>
+        <span class="highlight">Wednesday:</span> Correctives + 10-min walk.<br>
+        <span class="highlight">Thursday:</span> Full rest with no gym and no “light spin.”<br>
+        <span class="highlight">Friday:</span> Optional 10-min walk just to stay loose.<br>
+        <span class="highlight">Saturday:</span> 5K. Start conversational, finish strong.</p>
         <br>
-        <p>Eat a normal meal 2–3 hours before. No experiments. Sleep 8+ hours Thursday night.</p>
+        <p>Eat the normal pre-run meal 2–3 hours out, hydrate, and protect 8+ hours of sleep Thursday night. No new gear, no new nutrition experiments.</p>
       </div>
     </div>
   </div>
@@ -1225,13 +1320,14 @@
 
   <!-- ══════════════ LOG TAB ══════════════ -->
   <div id="tab-log" class="tab-panel">
-    <div class="section-label">Training Log — 12-Week Recovery History</div>
+    <div class="section-label">Training Log · 12-week recovery history</div>
     <p style="color:var(--text-dim);font-size:13px;margin-bottom:4px;">Every time you generate a prescription, hit Save to Log to record it. Your data persists in this browser even after closing.</p>
 
     <div class="log-stats" id="log-stats">
       <div class="log-stat-card"><div class="ls-label">Days Logged</div><div class="ls-value" id="ls-days">0</div><div class="ls-sub">of 84 total</div></div>
-      <div class="log-stat-card"><div class="ls-label">Avg Recovery</div><div class="ls-value" id="ls-avg-rec">—</div><div class="ls-sub">0–100</div></div>
-      <div class="log-stat-card"><div class="ls-label">Avg HRV</div><div class="ls-value" id="ls-avg-hrv">—</div><div class="ls-sub">milliseconds</div></div>
+      <div class="log-stat-card"><div class="ls-label">Avg Recovery</div><div class="ls-value" id="ls-avg-rec">N/A</div><div class="ls-sub">0–100</div></div>
+      <div class="log-stat-card"><div class="ls-label">Avg HRV</div><div class="ls-value" id="ls-avg-hrv">N/A</div><div class="ls-sub">milliseconds</div></div>
+      <div class="log-stat-card"><div class="ls-label">Avg Weight</div><div class="ls-value" id="ls-avg-weight">N/A</div><div class="ls-sub">pounds</div></div>
       <div class="log-stat-card"><div class="ls-label">Green Days</div><div class="ls-value" id="ls-green">0</div><div class="ls-sub">full training days</div></div>
     </div>
 
@@ -1241,10 +1337,11 @@
         <div class="log-cell">Recovery</div>
         <div class="log-cell">HRV</div>
         <div class="log-cell">Strain</div>
+        <div class="log-cell">Weight</div>
         <div class="log-cell">Status</div>
         <div class="log-cell">Actions</div>
       </div>
-      <div id="log-rows"><div class="log-empty">No entries yet — generate a prescription and save it to start your log.</div></div>
+      <div id="log-rows"><div class="log-empty">No entries yet. Generate a prescription and save it to start your log.</div></div>
     </div>
 
     <div class="log-actions">
@@ -1255,6 +1352,146 @@
 </main>
 
 <script>
+const DEEPINFRA_MODEL = 'meta-llama/Meta-Llama-3-8B-Instruct';
+const AI_COST_PER_CALL = 0.00005; // USD
+const MONTHLY_AI_BUDGET = 5; // USD
+const AI_USAGE_KEY_PREFIX = 'pulse_ai_usage_';
+const API_KEY_STORAGE_KEY = 'pulse_deepinfra_key';
+
+function getSavedApiKey() {
+  return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
+}
+
+function saveApiKey() {
+  const input = document.getElementById('deepinfra-key');
+  if (!input) return;
+  const value = input.value.trim();
+  if (!value) {
+    alert('Enter a valid DeepInfra API key before saving.');
+    return;
+  }
+  localStorage.setItem(API_KEY_STORAGE_KEY, value);
+  alert('API key saved locally.');
+}
+
+function clearApiKey() {
+  localStorage.removeItem(API_KEY_STORAGE_KEY);
+  const input = document.getElementById('deepinfra-key');
+  if (input) input.value = '';
+  const aiCoach = document.getElementById('ai-coach');
+  if (aiCoach) aiCoach.style.display = 'none';
+}
+
+function aiUsageKey() {
+  return `${AI_USAGE_KEY_PREFIX}${new Date().toISOString().slice(0,7)}`;
+}
+
+function getAiUsageCount() {
+  return parseInt(localStorage.getItem(aiUsageKey()) || '0', 10);
+}
+
+function recordAiCall() {
+  const key = aiUsageKey();
+  const next = getAiUsageCount() + 1;
+  localStorage.setItem(key, String(next));
+  updateAiUsageBanner();
+}
+
+function aiBudgetExceeded() {
+  return getAiUsageCount() * AI_COST_PER_CALL >= MONTHLY_AI_BUDGET;
+}
+
+function updateAiUsageBanner() {
+  const usageEl = document.getElementById('ai-usage');
+  const maxEl = document.getElementById('ai-max-calls');
+  const count = getAiUsageCount();
+  if (usageEl) {
+    const spend = (count * AI_COST_PER_CALL).toFixed(3);
+    usageEl.textContent = `Month-to-date AI calls: ${count} (~$${spend} of $${MONTHLY_AI_BUDGET} budget).`;
+  }
+  if (maxEl) {
+    maxEl.textContent = Math.floor(MONTHLY_AI_BUDGET / AI_COST_PER_CALL);
+  }
+}
+
+async function runAiCoachOverlay(heuristics, metrics) {
+  const aiCoach = document.getElementById('ai-coach');
+  const aiBody = document.getElementById('ai-coach-body');
+  if (!aiCoach || !aiBody) return;
+  const apiKey = getSavedApiKey();
+  if (!apiKey) {
+    aiCoach.style.display = 'none';
+    return;
+  }
+  if (aiBudgetExceeded()) {
+    aiCoach.style.display = 'block';
+    aiBody.textContent = 'Monthly AI budget (~$5) reached. Clear usage in local storage if you want to override.';
+    return;
+  }
+  aiCoach.style.display = 'block';
+  aiBody.textContent = 'Generating AI overlay via DeepInfra...';
+  try {
+    const prompt = buildAiPrompt(heuristics, metrics);
+    const response = await fetchDeepInfraPlan(prompt, apiKey);
+    aiBody.textContent = response;
+    recordAiCall();
+  } catch (err) {
+    aiBody.textContent = `AI overlay error: ${err.message}`;
+  }
+}
+
+function buildAiPrompt(heuristics, metrics) {
+  return `
+Date: ${new Date().toDateString()}
+Recovery: ${metrics.recovery ?? 'N/A'}
+HRV: ${metrics.hrv ?? 'N/A'}
+Strain: ${metrics.strain ?? 'N/A'}
+Weight: ${metrics.weight ?? 'N/A (goal 175 lb)'}
+Status bucket: ${heuristics.status}
+
+Baseline prescription:
+- Lifting: ${heuristics.lift}
+- Running: ${heuristics.run}
+- Correctives: ${heuristics.corrective}
+- Coach note: ${heuristics.note}
+
+Constraints: Provide <120 words. Give 2 short bullets: (1) training tweak, (2) recovery / lifestyle action. Reference the Whoop metrics directly and keep tone conversational.`.trim();
+}
+
+async function fetchDeepInfraPlan(prompt, apiKey) {
+  const response = await fetch('https://api.deepinfra.com/v1/openai/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: DEEPINFRA_MODEL,
+      max_tokens: 320,
+      temperature: 0.4,
+      messages: [
+        { role: 'system', content: 'You are Alex Williamson’s personal CSCS/physical therapy coach. Provide specific, actionable training adjustments matched to Whoop data, and stay concise.' },
+        { role: 'user', content: prompt }
+      ]
+    })
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`DeepInfra ${response.status}: ${text}`);
+  }
+  const data = await response.json();
+  const content = data?.choices?.[0]?.message?.content?.trim();
+  if (!content) throw new Error('No AI content returned.');
+  return content;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const keyInput = document.getElementById('deepinfra-key');
+  if (keyInput) keyInput.value = getSavedApiKey();
+  updateAiUsageBanner();
+});
+
 // ── TAB NAVIGATION ──
 function showTab(name) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1264,50 +1501,58 @@ function showTab(name) {
 }
 
 // ── WHOOP LOGIC ──
-function analyzeWhoop() {
+async function analyzeWhoop() {
   const recovery = parseInt(document.getElementById('recovery').value);
   const hrv = parseInt(document.getElementById('hrv').value);
   const strain = parseFloat(document.getElementById('strain').value);
+  const weight = parseFloat(document.getElementById('weight').value);
 
   if (isNaN(recovery)) {
-    alert('Enter your recovery score to generate a prescription.');
+    alert('Need today\'s recovery score before I can plan anything.');
     return;
   }
 
   let status, color, dotColor, lift, run, corrective, note;
 
   if (recovery >= 67) {
-    status = 'GREEN — TRAIN AS PROGRAMMED';
+    status = 'GREEN · FULL SEND';
     dotColor = 'var(--green)';
     color = 'var(--green)';
-    lift = 'Full programmed volume and intensity. Hit all sets and reps. AMRAP on final sets if feeling strong.';
-    run = 'Full run session as scheduled. Push interval durations if feeling good.';
-    corrective = 'Full 10-min corrective block before session. Do not skip.';
-    note = 'Your body is recovered. This is the day to earn adaptation. Train hard, recover well tonight — aim for 7–9 hrs sleep.';
+    lift = 'Run the written session exactly as planned. Finishers are on the table if energy is there.';
+    run = 'Stick with the programmed intervals and inch the pace forward if it feels smooth.';
+    corrective = 'Full 10-min corrective block before I touch a barbell because it keeps the calves + hips honest.';
+    note = 'Body is ready. Cash in on the work, eat real meals, and stack 7–9 hrs sleep tonight so tomorrow isn\'t a surprise yellow.';
   } else if (recovery >= 34) {
-    status = 'YELLOW — MODIFIED TRAINING';
+    status = 'YELLOW · PUMP THE BRAKES';
     dotColor = 'var(--yellow)';
     color = 'var(--yellow)';
-    lift = 'Reduce volume by 20%. Drop one set per exercise. Keep intensity (weight) the same — no AMRAP finishers today.';
-    run = 'Run at easy conversational pace only. No speed work. Reduce total distance by 25%.';
-    corrective = 'Full corrective block — this is especially important when HRV is suppressed.';
+    lift = 'Trim volume by ~20% (one set off each lift) but keep the weight honest. Skip the AMRAP ego checks.';
+    run = 'Just cruise. Conversational pace only and chop total distance down about a quarter.';
+    corrective = 'Still do the entire corrective circuit because HRV flags usually calm down when tissue stays happy.';
     note = strain > 14
-      ? 'Yesterday was a high-strain day — this yellow score makes sense. Reduce today\'s load, prioritize sleep tonight, and eat at or above maintenance.'
-      : 'Something is stressing your system (sleep, life stress, early illness). Train smart today, not hard. Adaptation still happens at reduced loads.';
+      ? 'Yesterday\'s strain was already high, so this yellow tracks. Dial it back, eat at maintenance or above, and focus on sleep hygiene.'
+      : 'Yellow without big strain means lifestyle stress is creeping in. Train smart, breathe more, and use today as controlled work, not a hero session.';
   } else {
-    status = 'RED — ACTIVE RECOVERY ONLY';
+    status = 'RED · RESET DAY';
     dotColor = 'var(--red)';
     color = 'var(--red)';
-    lift = 'No lifting today. Your nervous system needs recovery, not more stress.';
-    run = '20-minute easy walk only. No running. Keep HR below 120 bpm.';
-    corrective = 'Light corrective work only — hip flexors and calves, easy holds. No loading.';
-    note = 'Red is not failure — it\'s data. Pushing through red scores increases injury risk and delays adaptation. Eat well, sleep 8+ hours, and come back tomorrow. If you see red 3 days in a row, look at sleep quality, caloric intake, and life stress — something structural is off.';
+    lift = 'No lifting. Nervous system needs a full reset, not extra load.';
+    run = '20-min easy walk max. Keep HR under 120 bpm and unplug mentally.';
+    corrective = 'Loosen up hip flexors and calves with easy holds and skip anything weighted or grinding.';
+    note = 'Red is data, not doom. Treat it like a scheduled reset: big dinner, hydration, screens off early. If I string three reds in a row, it\'s a signal to audit sleep, calories, and overall stress.';
+  }
+
+  if (!isNaN(weight)) {
+    const delta = weight - 175;
+    const trend = delta > 0 ? `which is ${delta.toFixed(1)} lb above goal` : delta < 0 ? `${Math.abs(delta).toFixed(1)} lb under goal` : 'right on goal';
+    const nutritionCue = delta > 0 ? 'Hold the caloric deficit and prioritize protein + fiber today.' : delta < 0 ? 'Fuel enough to recover—don\'t over-cut calories.' : 'Maintain current intake split.';
+    note += ` Morning weight: ${weight.toFixed(1)} lb, ${trend}. ${nutritionCue}`;
   }
 
   document.getElementById('rx-status').innerHTML = `
     <div class="status-dot" style="background:${dotColor}; box-shadow: 0 0 10px ${dotColor}55;"></div>
     <div class="status-label" style="color:${color}">${status}</div>
-    ${hrv ? `<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:auto">HRV: ${hrv}ms · Yesterday Strain: ${isNaN(strain) ? '—' : strain}</div>` : ''}
+    ${hrv ? `<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:auto">HRV: ${hrv}ms · Yesterday Strain: ${isNaN(strain) ? 'N/A' : strain}</div>` : ''}
   `;
 
   document.getElementById('rx-grid').innerHTML = `
@@ -1315,10 +1560,14 @@ function analyzeWhoop() {
     <div class="rx-item"><div class="rx-label">Running</div><div class="rx-value">${run}</div></div>
     <div class="rx-item"><div class="rx-label">Corrective Work</div><div class="rx-value">${corrective}</div></div>
     <div class="rx-item"><div class="rx-label">Recovery Score</div><div class="rx-value" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:${color}">${recovery}<span style="font-size:16px;color:var(--text-dim)"> / 100</span></div></div>
+    ${isNaN(weight) ? '' : `<div class="rx-item"><div class="rx-label">Morning Weight</div><div class="rx-value">${weight.toFixed(1)} lb → Goal 175 lb</div></div>`}
   `;
 
-  document.getElementById('rx-note').innerHTML = `<strong style="color:var(--accent)">Coach Note:</strong> ${note}`;
+  document.getElementById('rx-note').innerHTML = `<strong style="color:var(--accent)">Inner Coach Note:</strong> ${note}`;
   document.getElementById('prescription').classList.add('visible');
+
+  const heuristics = { status, lift, run, corrective, note };
+  await runAiCoachOverlay(heuristics, { recovery, hrv: isNaN(hrv) ? null : hrv, strain: isNaN(strain) ? null : strain, weight: isNaN(weight) ? null : weight });
 }
 
 // ── SESSION BUILDER ──
@@ -1363,12 +1612,13 @@ function updateDayButtons() {
   }
 }
 
-function exRow(num, name, note, sets, reps, rest) {
+function exRow(num, name, note, sets, reps, load, rest) {
   return `<div class="exercise-row">
     <div class="ex-num">${num}</div>
     <div class="ex-name">${name}${note?`<span class="ex-note">${note}</span>`:''}</div>
     <div class="ex-sets">${sets}</div>
     <div class="ex-reps">${reps}</div>
+    <div class="ex-load">${load || 'Bodyweight'}</div>
     <div class="ex-rest">${rest}</div>
   </div>`;
 }
@@ -1379,6 +1629,7 @@ function tableHeader() {
     <div class="th-cell">Exercise</div>
     <div class="th-cell">Sets</div>
     <div class="th-cell">Reps</div>
+    <div class="th-cell">Load</div>
     <div class="th-cell">Rest</div>
   </div>`;
 }
@@ -1410,24 +1661,24 @@ function runBlock(intervals, totalNote) {
 const SESSIONS = {
   '1': {
     fullbody: () => sessionCard('FULL BODY LIFT', '45–55 min · Phase 1', `
-      <div class="section-divider">WARM-UP — 10 min corrective block (see Corrective tab)</div>
+      <div class="section-divider">WARM-UP · 10 min corrective block (see Corrective tab)</div>
       ${tableHeader()}
       <div class="exercise-list">
-        ${exRow(1,'Goblet Squat','Dumbbell — slow 3s down','3','12','90s')}
-        ${exRow(2,'Romanian Deadlift','Dumbbell — feel the hamstring stretch','3','12','90s')}
-        ${exRow(3,'DB Bench Press or Floor Press','Use what you have','3','12','75s')}
-        ${exRow(4,'DB Bent-Over Row','Brace core, no swinging','3','12','75s')}
-        ${exRow(5,'Standing DB Shoulder Press','','3','10','75s')}
-        ${exRow(6,'Single-Leg Calf Raise','Bodyweight, slow eccentric (3s down)','3','15 each','60s')}
-        ${exRow(7,'Plank Hold','Core stability','3','40s','60s')}
+        ${exRow(1,'Goblet Squat','Dumbbell (slow 3s down)','3','12','70 lb DB','90s')}
+        ${exRow(2,'Romanian Deadlift','Dumbbell (focus on the hamstring stretch)','3','12','2×60 lb DBs','90s')}
+        ${exRow(3,'DB Bench Press or Floor Press','Use what you have','3','12','2×60 lb DBs','75s')}
+        ${exRow(4,'DB Bent-Over Row','Brace core, no swinging','3','12','2×55 lb DBs','75s')}
+        ${exRow(5,'Standing DB Shoulder Press','','3','10','2×35 lb DBs','75s')}
+        ${exRow(6,'Single-Leg Calf Raise','Bodyweight, slow eccentric (3s down)','3','15 each','Bodyweight + 35 lb DB','60s')}
+        ${exRow(7,'Plank Hold','Core stability','3','40s','Bodyweight','60s')}
       </div>
-      <div class="section-divider">COOL-DOWN — 5 min hip flexor stretch + calf stretch</div>
+      <div class="section-divider">COOL-DOWN · 5 min hip flexor stretch + calf stretch</div>
     `),
     run: () => sessionCard('RUN DAY', 'Phase 1 · Run/Walk Protocol', `
-      <div class="section-divider">PRE-RUN — 5 min hip flexor correctives + ankle circles</div>
+      <div class="section-divider">PRE-RUN · 5 min hip flexor correctives + ankle circles</div>
       ${runBlock([
-        {type:'walk', desc:'Warm-up walk — easy pace', time:'5 min'},
-        {type:'run', desc:'Run interval — comfortable, can hold a conversation', time:'1 min'},
+        {type:'walk', desc:'Warm-up walk (easy pace)', time:'5 min'},
+        {type:'run', desc:'Run interval (comfortable, can hold a conversation)', time:'1 min'},
         {type:'walk', desc:'Recovery walk', time:'2 min'},
         {type:'run', desc:'Run interval', time:'1 min'},
         {type:'walk', desc:'Recovery walk', time:'2 min'},
@@ -1444,49 +1695,49 @@ const SESSIONS = {
         {type:'run', desc:'Run interval', time:'1 min'},
         {type:'walk', desc:'Cool-down walk', time:'3 min'},
       ], '8 × 1 min run / 2 min walk · Total ~30 min · Wk 2: add 2 rounds')}
-      <div class="section-divider">POST-RUN — 5 min calf stretch + quad stretch</div>
+      <div class="section-divider">POST-RUN · 5 min calf stretch + quad stretch</div>
     `),
     rest: () => sessionCard('ACTIVE RECOVERY', '20–30 min · No intensity', `
       <div class="run-block">
-        <div class="run-interval-row"><div class="interval-badge badge-walk">WALK</div><div class="interval-desc">Easy walk — outdoors if possible, flat surface</div><div class="interval-time">20 min</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">WALK</div><div class="interval-desc">Easy walk (outdoors if possible, flat surface)</div><div class="interval-time">20 min</div></div>
         <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Full hip flexor corrective block</div><div class="interval-time">10 min</div></div>
-        <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Calf stretching — gastroc + soleus both sides</div><div class="interval-time">5 min</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Calf stretching (gastroc + soleus both sides)</div><div class="interval-time">5 min</div></div>
         <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">No HR spike. No exertion. This day is building recovery capacity.</div>
       </div>
     `)
   },
   '2': {
     upper: () => sessionCard('UPPER BODY', '45–55 min · Phase 2', `
-      <div class="section-divider">WARM-UP — 5 min corrective (hip flexors + calf raise activation)</div>
+      <div class="section-divider">WARM-UP · 5 min corrective (hip flexors + calf raise activation)</div>
       ${tableHeader()}
       <div class="exercise-list">
-        ${exRow(1,'Barbell or DB Bench Press','Progressive load this phase','4','8','2 min')}
-        ${exRow(2,'Barbell or DB Row','Heavy and controlled','4','8','2 min')}
-        ${exRow(3,'Incline DB Press','','3','10','90s')}
-        ${exRow(4,'Lat Pulldown or Pull-Up','Cable preferred with gym access','3','10','90s')}
-        ${exRow(5,'Lateral Raise','Slow and controlled, not swinging','3','15','60s')}
-        ${exRow(6,'Face Pull or Band Pull-Apart','Shoulder health — do not skip','3','15','60s')}
-        ${exRow(7,'Tricep Pushdown + Curl Superset','','3','12 each','60s')}
+        ${exRow(1,'Barbell or DB Bench Press','Progressive load this phase','4','8','125–135 lb bar or 2×60 lb DBs','2 min')}
+        ${exRow(2,'Barbell or DB Row','Heavy and controlled','4','8','115 lb bar or 2×55 lb DBs','2 min')}
+        ${exRow(3,'Incline DB Press','','3','10','2×50 lb DBs','90s')}
+        ${exRow(4,'Lat Pulldown or Pull-Up','Cable preferred with gym access','3','10','110 lb stack','90s')}
+        ${exRow(5,'Lateral Raise','Slow and controlled, not swinging','3','15','2×20 lb DBs','60s')}
+        ${exRow(6,'Face Pull or Band Pull-Apart','Shoulder health reminder: do not skip','3','15','35 lb cable stack','60s')}
+        ${exRow(7,'Tricep Pushdown + Curl Superset','','3','12 each','35 lb stack / 25 lb DBs','60s')}
       </div>
     `),
     lower: () => sessionCard('LOWER BODY', '50–60 min · Phase 2', `
-      <div class="section-divider">WARM-UP — Full 10 min corrective block — priority this day</div>
+      <div class="section-divider">WARM-UP · Full 10 min corrective block (priority this day)</div>
       ${tableHeader()}
       <div class="exercise-list">
-        ${exRow(1,'Barbell Back Squat or Goblet Squat','Build to heavy-ish sets of 8','4','8','2 min')}
-        ${exRow(2,'Romanian Deadlift','Barbell preferred now','4','8','2 min')}
-        ${exRow(3,'Walking Lunges','DB or bodyweight','3','10 each','90s')}
-        ${exRow(4,'Leg Press','High foot placement — glute emphasis','3','12','90s')}
-        ${exRow(5,'Leg Curl','Machine or Nordic if available','3','12','90s')}
-        ${exRow(6,'Standing Calf Raise','Machine — loaded, slow eccentric','4','15','60s')}
-        ${exRow(7,'Single-Leg RDL','Bodyweight or light DB','3','10 each','60s')}
+        ${exRow(1,'Barbell Back Squat or Goblet Squat','Build to heavy-ish sets of 8','4','8','135 lb bar or 70 lb DB','2 min')}
+        ${exRow(2,'Romanian Deadlift','Barbell preferred now','4','8','115 lb bar','2 min')}
+        ${exRow(3,'Walking Lunges','DB or bodyweight','3','10 each','2×35 lb DBs','90s')}
+        ${exRow(4,'Leg Press','High foot placement (glute emphasis)','3','12','180 lb (2 plates/side)','90s')}
+        ${exRow(5,'Leg Curl','Machine or Nordic if available','3','12','80 lb stack','90s')}
+        ${exRow(6,'Standing Calf Raise','Machine (loaded, slow eccentric)','4','15','Bodyweight + 50 lb','60s')}
+        ${exRow(7,'Single-Leg RDL','Bodyweight or light DB','3','10 each','2×35 lb DBs','60s')}
       </div>
     `),
     run: () => sessionCard('RUN DAY', 'Phase 2 · Extended Intervals', `
-      <div class="section-divider">PRE-RUN — 5 min hip flexor correctives</div>
+      <div class="section-divider">PRE-RUN · 5 min hip flexor correctives</div>
       ${runBlock([
         {type:'walk', desc:'Warm-up walk', time:'5 min'},
-        {type:'run', desc:'Run interval — steady conversational pace', time:'2 min'},
+        {type:'run', desc:'Run interval (steady conversational pace)', time:'2 min'},
         {type:'walk', desc:'Recovery walk', time:'1 min'},
         {type:'run', desc:'Run interval', time:'2 min'},
         {type:'walk', desc:'Recovery walk', time:'1 min'},
@@ -1508,48 +1759,48 @@ const SESSIONS = {
       <div class="run-block">
         <div class="run-interval-row"><div class="interval-badge badge-walk">WALK</div><div class="interval-desc">20–30 min easy walk or light bike</div><div class="interval-time">25 min</div></div>
         <div class="run-interval-row"><div class="interval-badge badge-walk">MOB</div><div class="interval-desc">Hip flexor + calf corrective block</div><div class="interval-time">8 min</div></div>
-        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">4-day weeks create cumulative fatigue. This day is productive rest — treat it seriously.</div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">4-day weeks create cumulative fatigue. This day is productive rest, so treat it seriously.</div>
       </div>
     `)
   },
   '3': {
-    upper: () => sessionCard('UPPER BODY — TAPER', '40–50 min · Phase 3', `
-      <div class="section-divider">WARM-UP — 5 min corrective (feel-based)</div>
+    upper: () => sessionCard('UPPER BODY · TAPER', '40–50 min · Phase 3', `
+      <div class="section-divider">WARM-UP · 5 min corrective (feel-based)</div>
       ${tableHeader()}
       <div class="exercise-list">
-        ${exRow(1,'Bench Press','Keep weight same, drop 1 set','3','6','2 min')}
-        ${exRow(2,'Row','Keep weight same, drop 1 set','3','6','2 min')}
-        ${exRow(3,'Shoulder Press','','3','8','90s')}
-        ${exRow(4,'Lat Pulldown','','3','10','90s')}
-        ${exRow(5,'Band work — face pulls, pull-aparts','Shoulder health maintenance','2','15','60s')}
+        ${exRow(1,'Bench Press','Keep weight same, drop 1 set','3','6','125 lb bar or 2×60 lb DBs','2 min')}
+        ${exRow(2,'Row','Keep weight same, drop 1 set','3','6','110 lb bar or 2×55 lb DBs','2 min')}
+        ${exRow(3,'Shoulder Press','','3','8','2×35 lb DBs','90s')}
+        ${exRow(4,'Lat Pulldown','','3','10','105 lb stack','90s')}
+        ${exRow(5,'Band work (face pulls, pull-aparts)','Shoulder health maintenance','2','15','Light band / 25 lb stack','60s')}
       </div>
       <div class="section-divider">Note: No AMRAP sets in Phase 3. Leave 2–3 reps in the tank always.</div>
     `),
-    lower: () => sessionCard('LOWER BODY — TAPER', '40–50 min · Phase 3', `
-      <div class="section-divider">WARM-UP — Full corrective block — legs need it before race week</div>
+    lower: () => sessionCard('LOWER BODY · TAPER', '40–50 min · Phase 3', `
+      <div class="section-divider">WARM-UP · Full corrective block (legs need it before race week)</div>
       ${tableHeader()}
       <div class="exercise-list">
-        ${exRow(1,'Squat','Same weight as peak, 1 fewer set','3','6','2 min')}
-        ${exRow(2,'Romanian Deadlift','','3','6','2 min')}
-        ${exRow(3,'Leg Press','','2','10','90s')}
-        ${exRow(4,'Calf Raise','Maintain — these directly support running','3','15','60s')}
-        ${exRow(5,'Single-Leg Balance Work','Proprioception for run prep','3','30s each','45s')}
+        ${exRow(1,'Squat','Same weight as peak, 1 fewer set','3','6','125–135 lb bar','2 min')}
+        ${exRow(2,'Romanian Deadlift','','3','6','115 lb bar','2 min')}
+        ${exRow(3,'Leg Press','','2','10','160 lb (light taper)','90s')}
+        ${exRow(4,'Calf Raise','Maintain these because they directly support running','3','15','Bodyweight + 40 lb','60s')}
+        ${exRow(5,'Single-Leg Balance Work','Proprioception for run prep','3','30s each','Bodyweight','45s')}
       </div>
     `),
-    run: () => sessionCard('RUN — TAPER / PEAK', 'Phase 3 · Continuous Running', `
-      <div class="section-divider">PRE-RUN — 5 min easy correctives</div>
+    run: () => sessionCard('RUN · TAPER / PEAK', 'Phase 3 · Continuous Running', `
+      <div class="section-divider">PRE-RUN · 5 min easy correctives</div>
       ${runBlock([
         {type:'walk', desc:'Warm-up walk', time:'5 min'},
-        {type:'run', desc:'Continuous run — easy conversational pace. Wk 10: 25 min', time:'25 min'},
+        {type:'run', desc:'Continuous run (easy conversational pace). Wk 10: 25 min', time:'25 min'},
         {type:'walk', desc:'Recovery walk', time:'3 min'},
-        {type:'run', desc:'Optional second run block if feeling strong — Wk 11: full 5K practice', time:'10–15 min'},
+        {type:'run', desc:'Optional second run block if feeling strong (Wk 11 is the full 5K practice)', time:'10–15 min'},
         {type:'walk', desc:'Cool-down walk', time:'5 min'},
       ], 'Wk 10: 25 min continuous · Wk 11: full 5K practice run · Wk 12: 2 mi easy only (race week)')}
     `),
     rest: () => sessionCard('RACE WEEK REST', 'Week 12 · Priority: Sleep and Nutrition', `
       <div class="run-block">
         <div class="run-interval-row"><div class="interval-badge badge-walk">REST</div><div class="interval-desc">No lifting. No running. Full rest Thursday before race.</div><div class="interval-time">Full day</div></div>
-        <div class="run-interval-row"><div class="interval-badge badge-walk">EAT</div><div class="interval-desc">Eat at maintenance — don't restrict calories race week</div><div class="interval-time">All day</div></div>
+        <div class="run-interval-row"><div class="interval-badge badge-walk">EAT</div><div class="interval-desc">Eat at maintenance; don't restrict calories race week</div><div class="interval-time">All day</div></div>
         <div class="run-interval-row"><div class="interval-badge badge-walk">SLEEP</div><div class="interval-desc">8+ hours. Non-negotiable for performance.</div><div class="interval-time">Tonight</div></div>
         <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--green)">You've put in the 12 weeks. Race day is just showing up.</div>
       </div>
@@ -1590,6 +1841,7 @@ function saveToLog() {
   const recovery = parseInt(document.getElementById('recovery').value);
   const hrv = parseInt(document.getElementById('hrv').value);
   const strain = parseFloat(document.getElementById('strain').value);
+  const weight = parseFloat(document.getElementById('weight').value);
   if (isNaN(recovery)) return;
 
   let statusText;
@@ -1604,6 +1856,7 @@ function saveToLog() {
     recovery,
     hrv: isNaN(hrv) ? null : hrv,
     strain: isNaN(strain) ? null : strain,
+    weight: isNaN(weight) ? null : weight,
     status: statusText,
   };
 
@@ -1639,15 +1892,17 @@ function renderLog() {
   const rowsEl = document.getElementById('log-rows');
 
   if (entries.length === 0) {
-    rowsEl.innerHTML = '<div class="log-empty">No entries yet — generate a prescription and save it to start your log.</div>';
+    rowsEl.innerHTML = '<div class="log-empty">No entries yet. Generate a prescription and save it to start your log.</div>';
   } else {
     rowsEl.innerHTML = entries.map(e => {
       const scoreClass = e.status === 'GREEN' ? 'log-score-green' : e.status === 'YELLOW' ? 'log-score-yellow' : 'log-score-red';
+      const weightCell = e.weight !== null ? `${e.weight.toFixed(1)} lb` : 'N/A';
       return `<div class="log-entry">
         <div class="log-cell" style="font-family:'DM Mono',monospace;font-size:12px;">${e.date}</div>
         <div class="log-cell ${scoreClass}">${e.recovery}</div>
-        <div class="log-cell" style="color:var(--text-mid)">${e.hrv ?? '—'}</div>
-        <div class="log-cell" style="color:var(--text-mid)">${e.strain ?? '—'}</div>
+        <div class="log-cell" style="color:var(--text-mid)">${e.hrv ?? 'N/A'}</div>
+        <div class="log-cell" style="color:var(--text-mid)">${e.strain ?? 'N/A'}</div>
+        <div class="log-cell" style="color:var(--text-mid)">${weightCell}</div>
         <div class="log-cell"><span class="${scoreClass}" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;">${e.status}</span></div>
         <div class="log-cell"><button onclick="deleteEntry(${e.id})" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;">REMOVE</button></div>
       </div>`;
@@ -1659,14 +1914,17 @@ function renderLog() {
   const avgRec = entries.length ? Math.round(entries.reduce((s,e) => s + e.recovery, 0) / entries.length) : null;
   const hrvEntries = entries.filter(e => e.hrv !== null);
   const avgHrv = hrvEntries.length ? Math.round(hrvEntries.reduce((s,e) => s + e.hrv, 0) / hrvEntries.length) : null;
+  const weightEntries = entries.filter(e => e.weight !== null);
+  const avgWeight = weightEntries.length ? (weightEntries.reduce((s,e) => s + e.weight, 0) / weightEntries.length).toFixed(1) : null;
 
   document.getElementById('ls-days').textContent = entries.length;
-  document.getElementById('ls-avg-rec').textContent = avgRec ?? '—';
-  document.getElementById('ls-avg-hrv').textContent = avgHrv ?? '—';
+  document.getElementById('ls-avg-rec').textContent = avgRec !== null ? avgRec : 'N/A';
+  document.getElementById('ls-avg-hrv').textContent = avgHrv !== null ? avgHrv : 'N/A';
+  document.getElementById('ls-avg-weight').textContent = avgWeight !== null ? `${avgWeight} lb` : 'N/A';
   document.getElementById('ls-green').textContent = greens;
 }
 
-// Show save button after prescription is generated — patch analyzeWhoop
+// Show save button after prescription is generated - patch analyzeWhoop
 const _origAnalyze = analyzeWhoop;
 analyzeWhoop = function() {
   _origAnalyze();
