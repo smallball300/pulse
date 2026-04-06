@@ -98,6 +98,17 @@
     padding: 0 40px;
     gap: 0;
     overflow-x: auto;
+    position: relative;
+  }
+
+  nav::after {
+    content: '';
+    position: sticky;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(17,17,17,0), rgba(17,17,17,1));
+    pointer-events: none;
   }
 
   nav button {
@@ -696,6 +707,7 @@
     width: 100%;
     overflow-x: auto;
     margin-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .table-scroll table {
@@ -706,6 +718,12 @@
 
   .table-scroll .log-table {
     min-width: 640px;
+  }
+
+  .session-content-scroll {
+    padding: 0 24px 24px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .session-card {
